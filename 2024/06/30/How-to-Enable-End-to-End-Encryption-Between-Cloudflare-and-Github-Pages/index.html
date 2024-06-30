@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://cloudsoup.net/images/gh-pages-end-to-end-unencrypted.png">
 <meta property="og:image" content="https://cloudsoup.net/images/cloudflare-ssl.png">
 <meta property="article:published_time" content="2024-06-30T05:03:49.000Z">
-<meta property="article:modified_time" content="2024-06-30T06:42:20.705Z">
+<meta property="article:modified_time" content="2024-06-30T07:04:42.991Z">
 <meta property="article:author" content="Dave">
 <meta property="article:tag" content="encryption">
 <meta property="article:tag" content="web hosting">
@@ -123,7 +123,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Two-Options-to-Handle-End-to-End-Encryption"><span class="toc-number">2.</span> <span class="toc-text">Two Options to Handle End-to-End Encryption</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path"><span class="toc-number">2.1.</span> <span class="toc-text">Allowing Github pages to establish an HTTPS connection for the whole path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><span class="toc-number">2.2.</span> <span class="toc-text">Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flexible-Encryption-Cloudflare"><span class="toc-number">3.</span> <span class="toc-text">Flexible Encryption (Cloudflare)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Going-From-Flexible-to-Full-Strict-Encryption"><span class="toc-number">4.</span> <span class="toc-text">Going From Flexible to Full (Strict) Encryption</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Two-Options-to-Handle-End-to-End-Encryption"><span class="toc-number">2.</span> <span class="toc-text">Two Options to Handle End-to-End Encryption</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path"><span class="toc-number">2.1.</span> <span class="toc-text">Allowing Github pages to establish an HTTPS connection for the whole path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><span class="toc-number">2.2.</span> <span class="toc-text">Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What%E2%80%99s-the-difference-between-the-two-options"><span class="toc-number">3.</span> <span class="toc-text">What’s the difference between the two options?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flexible-Encryption-Cloudflare"><span class="toc-number">4.</span> <span class="toc-text">Flexible Encryption (Cloudflare)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Going-From-Flexible-to-Full-Strict-Encryption"><span class="toc-number">5.</span> <span class="toc-text">Going From Flexible to Full (Strict) Encryption</span></a></li></ol>
       </div>
     
   </span>
@@ -180,23 +180,23 @@
 <h3 id="Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path"><a href="#Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path" class="headerlink" title="Allowing Github pages to establish an HTTPS connection for the whole path"></a>Allowing Github pages to establish an HTTPS connection for the whole path</h3><p>This is the simpler option. To achieve this, create a CNAME record pointing to your GitHub Pages URL and make sure to uncheck the ‘proxy’ setting during this setup.</p>
 <p><img src="/images/cloudflare-proxy-setting.png" alt="cloudflare proxy setting"></p>
 <p>On the github pages side, ensure that <code>Enforce HTTPS</code> is checked.</p>
-<h3 id="Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><a href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages" class="headerlink" title="Terminate the connection at cloudflare, then have cloudflare re-establish with github pages"></a>Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</h3><p>This is my preferred option. The benefits are awesome! Cloudflare gives you many features free of charge, such as:</p>
-<ul>
-<li>CDN (Content Delivery Network) for improved global performance</li>
-<li>DDoS protection</li>
-<li>A Web Application Firewall (WAF)</li>
-<li>Caching and optimization features</li>
-</ul>
-<p>To achieve this, see <code>Going From Flexible to Full (Strict) Encryption</code> below.</p>
+<h3 id="Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><a href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages" class="headerlink" title="Terminate the connection at cloudflare, then have cloudflare re-establish with github pages"></a>Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</h3><h2 id="What’s-the-difference-between-the-two-options"><a href="#What’s-the-difference-between-the-two-options" class="headerlink" title="What’s the difference between the two options?"></a>What’s the difference between the two options?</h2><p>The main differentiator of the two options is whether you want to rely on the <code>cloudflare CDN</code> (this option) or the <code>fastly CDN</code> (option 1). They’re both very trustworthy and it comes down to personal preference.</p>
+<p>UPDATE 6&#x2F;2024:</p>
+<p>According to <a target="_blank" rel="noopener" href="https://community.cloudflare.com/t/github-pages-keep-saying-it-cant-enforce-https/397570">this forum post</a>, a user says:</p>
+<blockquote>
+<p>Github Pages can’t&#x2F;won’t generate an SSL certificate while your DNS entries are orange-clouded. You can orange-cloud the DNS entries AFTER the SSL certificate is generated, however, the certificate won’t be able to renew and will expire after 3 months. If you’re using the most secure SSL mode, Full(Strict), traffic will no longer pass when the certificate expires. You can either repeat the process (temporarily grey-cloud) every 3 months, or use the less-secure Full (non-strict) SSL mode which allows Cloudflare to continue trusting the expired certificate (insecure). Or just leave the DNS entries grey-clouded permanently if you don’t actually need Cloudflare proxy features for the site; you’ll still have a CDN since Github Pages uses Fastly.</p>
+</blockquote>
+<p>This suggests to me that using Fastly (not checking the orange cloud) and therefore option 1 is the most hands-off way to achieve end to end encryption. Using the cloudflare CDN requires operating in Full, but NOT Full (strict) mode.</p>
 <h2 id="Flexible-Encryption-Cloudflare"><a href="#Flexible-Encryption-Cloudflare" class="headerlink" title="Flexible Encryption (Cloudflare)"></a>Flexible Encryption (Cloudflare)</h2><p>By default, the traffic between the client and your domain is usually encrypted, but the traffic between your domain and github pages may actually be sent via HTTP. This can pose as a security risk.</p>
 <p><img src="/images/gh-pages-end-to-end-unencrypted.png" alt="unencrypted-last-leg"></p>
 <p>Cloudflare has a mode called <code>flexible encryption</code> enabled by default. We need to change this to enforce end to end encryption.</p>
 <h2 id="Going-From-Flexible-to-Full-Strict-Encryption"><a href="#Going-From-Flexible-to-Full-Strict-Encryption" class="headerlink" title="Going From Flexible to Full (Strict) Encryption"></a>Going From Flexible to Full (Strict) Encryption</h2><p>There are 3 steps to active full (strict) encryption:</p>
 <ol>
-<li><p>Create a CNAME record pointing to your GitHub Pages URL (normally looks like <username>.github.io–there is no need to include the repository name). This can be done by going to the Cloudflare homepage -&gt; login -&gt; click on your purchased domain -&gt; open up the sidebar -&gt; DNS -&gt; records -&gt; add record -&gt; type: CNAME, name: @, target: <username>.github.io</p>
-</li>
-<li><p>In Cloudflare, set the SSL&#x2F;TLS encryption mode to “Full” or “Full (strict)”. This can be done by going to the Cloudflare homepage -&gt; login -&gt; click on your purchased domain -&gt; open up the sidebar -&gt; SSL&#x2F;TLS -&gt; check the box that says:</p>
-</li>
+<li>Create a CNAME record pointing to your GitHub Pages URL (normally looks like <username>.github.io–there is no need to include the repository name). This can be done by going to the Cloudflare homepage -&gt; login -&gt; click on your purchased domain -&gt; open up the sidebar -&gt; DNS -&gt; records -&gt; add record -&gt; type: CNAME, name: @, target: <username>.github.io</li>
+</ol>
+<p>At this stage, ensure that you do NOT check the orange cloud (proxy) switch!</p>
+<ol start="2">
+<li>In Cloudflare, set the SSL&#x2F;TLS encryption mode to “Full” or “Full (strict)”. This can be done by going to the Cloudflare homepage -&gt; login -&gt; click on your purchased domain -&gt; open up the sidebar -&gt; SSL&#x2F;TLS -&gt; check the box that says:</li>
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Full (strict)</span><br><span class="line">(Recommended mode) Enable encryption end-to-end and enforce validation on origin certificates. Use Cloudflare’s Origin CA to generate certificates for your origin.</span><br></pre></td></tr></table></figure>
 
@@ -208,7 +208,12 @@
 <p>You may notice that there is a message that says</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Enforce HTTPS — Unavailable for your site because your domain is not properly configured to support HTTPS (example.com) — Troubleshooting custom domains</span><br></pre></td></tr></table></figure>
 
-<p>This is usually a sign that DNS propogation has not finished, and you may need to wait for some time before it is possible to enable it. In this state, while traffic from the client to github pages is encrypted, the response might still be visible to cloudflare. It is worth waiting until it is available and enabling HTTPS on the github pages side as well.</p>
+<p>This is usually a sign that DNS propagation has not finished, and you may need to wait for some time before it is possible to enable it. In this state, while traffic from the client to github pages is encrypted, the response might still be visible to cloudflare. It is worth waiting until it is available and enabling HTTPS on the github pages side as well.</p>
+<p>Next, depending on if you want to use the cloudflare CDN or fastly CDN, your final step differs.</p>
+<ul>
+<li>if you want to use the cloudflare CDN, go back and check the orange cloud to enable proxying.</li>
+<li>if you want to use the fastly CDN, you must wait until DNS propagation is finished. Then check the ‘enforce HTTPS’ option on github pages.</li>
+</ul>
 <p>Congratulations, you now have end to end encryption plus the benefits of using a CDN.</p>
 
   </div>
@@ -237,7 +242,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Two-Options-to-Handle-End-to-End-Encryption"><span class="toc-number">2.</span> <span class="toc-text">Two Options to Handle End-to-End Encryption</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path"><span class="toc-number">2.1.</span> <span class="toc-text">Allowing Github pages to establish an HTTPS connection for the whole path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><span class="toc-number">2.2.</span> <span class="toc-text">Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flexible-Encryption-Cloudflare"><span class="toc-number">3.</span> <span class="toc-text">Flexible Encryption (Cloudflare)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Going-From-Flexible-to-Full-Strict-Encryption"><span class="toc-number">4.</span> <span class="toc-text">Going From Flexible to Full (Strict) Encryption</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Two-Options-to-Handle-End-to-End-Encryption"><span class="toc-number">2.</span> <span class="toc-text">Two Options to Handle End-to-End Encryption</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path"><span class="toc-number">2.1.</span> <span class="toc-text">Allowing Github pages to establish an HTTPS connection for the whole path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><span class="toc-number">2.2.</span> <span class="toc-text">Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What%E2%80%99s-the-difference-between-the-two-options"><span class="toc-number">3.</span> <span class="toc-text">What’s the difference between the two options?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flexible-Encryption-Cloudflare"><span class="toc-number">4.</span> <span class="toc-text">Flexible Encryption (Cloudflare)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Going-From-Flexible-to-Full-Strict-Encryption"><span class="toc-number">5.</span> <span class="toc-text">Going From Flexible to Full (Strict) Encryption</span></a></li></ol>
       </div>
     
 
