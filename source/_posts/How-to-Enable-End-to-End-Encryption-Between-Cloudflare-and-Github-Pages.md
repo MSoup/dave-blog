@@ -35,14 +35,17 @@ On the github pages side, ensure that `Enforce HTTPS` is checked.
 
 ### Terminate the connection at cloudflare, then have cloudflare re-establish with github pages
 
-This is my preferred option. The benefits are awesome! Cloudflare gives you many features free of charge, such as:
+## What's the difference between the two options?
 
--   CDN (Content Delivery Network) for improved global performance
--   DDoS protection
--   A Web Application Firewall (WAF)
--   Caching and optimization features
+The main differentiator of the two options is whether you want to rely on the `cloudflare CDN` (this option) or the `fastly CDN` (option 1). They're both very trustworthy and it comes down to personal preference.
 
-To achieve this, see `Going From Flexible to Full (Strict) Encryption` below.
+UPDATE 6/2024:
+
+According to [this forum post](https://community.cloudflare.com/t/github-pages-keep-saying-it-cant-enforce-https/397570), a user says:
+
+> Github Pages can’t/won’t generate an SSL certificate while your DNS entries are orange-clouded. You can orange-cloud the DNS entries AFTER the SSL certificate is generated, however, the certificate won’t be able to renew and will expire after 3 months. If you’re using the most secure SSL mode, Full(Strict), traffic will no longer pass when the certificate expires. You can either repeat the process (temporarily grey-cloud) every 3 months, or use the less-secure Full (non-strict) SSL mode which allows Cloudflare to continue trusting the expired certificate (insecure). Or just leave the DNS entries grey-clouded permanently if you don’t actually need Cloudflare proxy features for the site; you’ll still have a CDN since Github Pages uses Fastly.
+
+This suggests to me that using Fastly (not checking the orange cloud) and therefore option 1 is the most hands-off way to achieve end to end encryption. Using the cloudflare CDN requires operating in Full, but NOT Full (strict) mode.
 
 ## Flexible Encryption (Cloudflare)
 
@@ -57,6 +60,8 @@ Cloudflare has a mode called `flexible encryption` enabled by default. We need t
 There are 3 steps to active full (strict) encryption:
 
 1. Create a CNAME record pointing to your GitHub Pages URL (normally looks like <username>.github.io--there is no need to include the repository name). This can be done by going to the Cloudflare homepage -> login -> click on your purchased domain -> open up the sidebar -> DNS -> records -> add record -> type: CNAME, name: @, target: <username>.github.io
+
+At this stage, ensure that you do NOT check the orange cloud (proxy) switch!
 
 2. In Cloudflare, set the SSL/TLS encryption mode to "Full" or "Full (strict)". This can be done by going to the Cloudflare homepage -> login -> click on your purchased domain -> open up the sidebar -> SSL/TLS -> check the box that says:
 
@@ -77,6 +82,11 @@ You may notice that there is a message that says
 Enforce HTTPS — Unavailable for your site because your domain is not properly configured to support HTTPS (example.com) — Troubleshooting custom domains
 ```
 
-This is usually a sign that DNS propogation has not finished, and you may need to wait for some time before it is possible to enable it. In this state, while traffic from the client to github pages is encrypted, the response might still be visible to cloudflare. It is worth waiting until it is available and enabling HTTPS on the github pages side as well.
+This is usually a sign that DNS propagation has not finished, and you may need to wait for some time before it is possible to enable it. In this state, while traffic from the client to github pages is encrypted, the response might still be visible to cloudflare. It is worth waiting until it is available and enabling HTTPS on the github pages side as well.
+
+Next, depending on if you want to use the cloudflare CDN or fastly CDN, your final step differs.
+
+-   if you want to use the cloudflare CDN, go back and check the orange cloud to enable proxying.
+-   if you want to use the fastly CDN, you must wait until DNS propagation is finished. Then check the 'enforce HTTPS' option on github pages.
 
 Congratulations, you now have end to end encryption plus the benefits of using a CDN.
