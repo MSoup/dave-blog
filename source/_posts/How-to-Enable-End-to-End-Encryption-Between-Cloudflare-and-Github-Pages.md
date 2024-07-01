@@ -41,7 +41,7 @@ The main differentiator of the two options is whether you want to rely on the `c
 
 UPDATE 6/2024:
 
-According to [this forum post](https://community.cloudflare.com/t/github-pages-keep-saying-it-cant-enforce-https/397570), a user says:
+According to [this post over on the cloudflare community forums](https://community.cloudflare.com/t/github-pages-keep-saying-it-cant-enforce-https/397570), a user says:
 
 > Github Pages can’t/won’t generate an SSL certificate while your DNS entries are orange-clouded. You can orange-cloud the DNS entries AFTER the SSL certificate is generated, however, the certificate won’t be able to renew and will expire after 3 months. If you’re using the most secure SSL mode, Full(Strict), traffic will no longer pass when the certificate expires. You can either repeat the process (temporarily grey-cloud) every 3 months, or use the less-secure Full (non-strict) SSL mode which allows Cloudflare to continue trusting the expired certificate (insecure). Or just leave the DNS entries grey-clouded permanently if you don’t actually need Cloudflare proxy features for the site; you’ll still have a CDN since Github Pages uses Fastly.
 
