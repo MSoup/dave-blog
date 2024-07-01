@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://cloudsoup.net/images/gh-pages-end-to-end-unencrypted.png">
 <meta property="og:image" content="https://cloudsoup.net/images/cloudflare-ssl.png">
 <meta property="article:published_time" content="2024-06-30T05:03:49.000Z">
-<meta property="article:modified_time" content="2024-06-30T07:04:42.991Z">
+<meta property="article:modified_time" content="2024-07-01T07:58:37.604Z">
 <meta property="article:author" content="Dave">
 <meta property="article:tag" content="encryption">
 <meta property="article:tag" content="web hosting">
@@ -182,7 +182,7 @@
 <p>On the github pages side, ensure that <code>Enforce HTTPS</code> is checked.</p>
 <h3 id="Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><a href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages" class="headerlink" title="Terminate the connection at cloudflare, then have cloudflare re-establish with github pages"></a>Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</h3><h2 id="What’s-the-difference-between-the-two-options"><a href="#What’s-the-difference-between-the-two-options" class="headerlink" title="What’s the difference between the two options?"></a>What’s the difference between the two options?</h2><p>The main differentiator of the two options is whether you want to rely on the <code>cloudflare CDN</code> (this option) or the <code>fastly CDN</code> (option 1). They’re both very trustworthy and it comes down to personal preference.</p>
 <p>UPDATE 6&#x2F;2024:</p>
-<p>According to <a target="_blank" rel="noopener" href="https://community.cloudflare.com/t/github-pages-keep-saying-it-cant-enforce-https/397570">this forum post</a>, a user says:</p>
+<p>According to <a target="_blank" rel="noopener" href="https://community.cloudflare.com/t/github-pages-keep-saying-it-cant-enforce-https/397570">this post over on the cloudflare community forums</a>, a user says:</p>
 <blockquote>
 <p>Github Pages can’t&#x2F;won’t generate an SSL certificate while your DNS entries are orange-clouded. You can orange-cloud the DNS entries AFTER the SSL certificate is generated, however, the certificate won’t be able to renew and will expire after 3 months. If you’re using the most secure SSL mode, Full(Strict), traffic will no longer pass when the certificate expires. You can either repeat the process (temporarily grey-cloud) every 3 months, or use the less-secure Full (non-strict) SSL mode which allows Cloudflare to continue trusting the expired certificate (insecure). Or just leave the DNS entries grey-clouded permanently if you don’t actually need Cloudflare proxy features for the site; you’ll still have a CDN since Github Pages uses Fastly.</p>
 </blockquote>
