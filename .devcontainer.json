@@ -1,10 +1,5 @@
 {
     "build": { "dockerfile": "Dockerfile" },
-    "customizations": {
-        "vscode": {
-            "extensions": ["streetsidesoftware.code-spell-checker"]
-        }
-    },
     "forwardPorts": [4000],
     "overrideCommand": false
 }
