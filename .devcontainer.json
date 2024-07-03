@@ -1,5 +1,7 @@
 {
     "build": { "dockerfile": "Dockerfile" },
     "forwardPorts": [4000],
-    "overrideCommand": false
+    "overrideCommand": false,
+    "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached",
+    "workspaceFolder": "/app"
 }

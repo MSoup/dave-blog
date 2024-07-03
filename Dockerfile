@@ -5,8 +5,11 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN apt-get update || : && apt-get install -y openssl git
+RUN apt-get update || : && apt-get install -y vim git openssh-client
 RUN npm install
+
+# Guide SSH user agent for this specific repo
+RUN mkdir ~/.ssh && printf 'Host personal.github.com\n  HostName github.com' >> ~/.ssh/config
 
 COPY . .
 
