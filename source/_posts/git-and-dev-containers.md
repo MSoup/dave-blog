@@ -1,11 +1,13 @@
 ---
-title: The Black Magic of Git in a dev container
+title: Understanding Navigating Git in a dev container
 tags:
-    - devops
-    - containers
-    - docker
-    - ssh-agent
+  - devops
+  - containers
+  - docker
+  - ssh-agent
+date: 2024-07-04 04:21:29
 ---
+
 
 ## Background
 
@@ -26,6 +28,14 @@ There is a chance that git will just work out of the box, but this has not been 
 There are two ways to use git through a dev container. The first way involves git's credential helper.
 
 ### Git and Dev Containers Method 1: Credential Helper
+
+The first thing is to actually make sure git is installed in your image. Lots of images come with git, but if they don't, you may need to add a line into your Dockerfile
+
+<!-- Debian Based Distros -->
+`apt-get install -y vim git`
+
+<!-- RPM Based Distros -->
+`dnf install git`
 
 From the official documentation:
 
@@ -157,3 +167,4 @@ Already up to date.
 ## Conclusion
 
 Copying over your private keys breaks a core principle of security--private keys should never leave your system. We also want to keep complexity to a minimum by not introducing private keys on a per-host basis, as this would not be feasible if you were tasked with working with numerous machines.
+
