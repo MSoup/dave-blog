@@ -2,6 +2,8 @@
 title: (Guide) How to start a tech blog FAST with Hexo
 date: 2024-06-29 14:15:29
 tags: blogging
+categories:
+    - Guides
 ---
 
 If you are an aspiring tech blogger looking to launch your site quickly, look no more. This post is about how I spun up a blog in under 15 minutes using [Hexo](https://hexo.io/) (I was not paid to write this).

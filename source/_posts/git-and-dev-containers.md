@@ -7,6 +7,8 @@ tags:
     - ssh-agent
     - git
 date: 2024-07-04 04:21:29
+categories:
+    - Guides
 ---
 
 ## Background
