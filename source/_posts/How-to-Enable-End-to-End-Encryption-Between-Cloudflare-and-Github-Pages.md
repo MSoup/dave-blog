@@ -15,11 +15,11 @@ date: 2024-06-30 14:03:49
 
 ## Background
 
-One of the more common ways to host a static website for free nowadays is by utilizing [Github Pages](https://pages.github.com/). A caveat to using it is that you are handed a domain name that might look like `example.github.io/some-repo-name`. Not exactly the most pretty domain name.
+One of the more common ways to host a static website for free today is by utilizing [Github Pages](https://pages.github.com/). A caveat to using it is that you are handed a domain name that might look like `example.github.io/some-repo-name`. Not exactly the most pretty domain name.
 
-To get around this, you may consider buying a domain off of GoDaddy, Namecheap, Google Domains, Cloudflare, or another domain registrar.
+To get around this, consider buying a domain off of GoDaddy, Namecheap, Google Domains, Cloudflare, or another domain registrar.
 
-When using your own web servers, you'd achieve end to end encryption by setting up virtual hosts on your web server (in this case, github pages) and install an SSL certificate for cloudflare's domain within github pages, but as Github pages uses an automated system to install SSL certificates for you, there is never a need to manually install SSL certificates. GitHub Pages automatically provides HTTPS for custom domains. Convenient, right?
+On your own web servers, you'd normally achieve end to end encryption by setting up virtual hosts on your web server (in this case, github pages) and install an SSL certificate for cloudflare's domain within github pages, but as Github pages uses an automated system to install SSL certificates for you, there is never a need to manually install SSL certificates. GitHub Pages automatically provides HTTPS for custom domains. Convenient, right?
 
 ## Two Options to Handle End-to-End Encryption
 
@@ -86,7 +86,20 @@ This is usually a sign that DNS propagation has not finished, and you may need t
 
 Next, depending on if you want to use the cloudflare CDN or fastly CDN, your final step differs.
 
--   if you want to use the cloudflare CDN, go back and check the orange cloud to enable proxying.
--   if you want to use the fastly CDN, you must wait until DNS propagation is finished. Then check the 'enforce HTTPS' option on github pages.
+-   if you want to use the cloudflare CDN, go back and check the orange cloud to enable proxying
+-   if you want to use the fastly CDN, you must wait until DNS propagation is finished. Then check the 'enforce HTTPS' option on github pages
+
+## Enforce HTTPS only
+
+Go to your cloudflare dashboard > SSL/TLS > Edge Certificates
+![edge certificates](/images/edge-certificates.png)
+
+Then enable two options:
+
+-   Always use HTTPS
+    Redirect all requests with scheme “http” to “https”. This applies to all http requests to the zone.
+
+-   Automatic HTTPS Rewrites
+    Automatic HTTPS Rewrites helps fix mixed content by changing “http” to “https” for all resources or links on your web site that can be served with HTTPS.
 
 Congratulations, you now have end to end encryption plus the benefits of using a CDN.
