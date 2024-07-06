@@ -1,5 +1,5 @@
 ---
-title: How to start a tech blog FAST (with Hexo)
+title: (Guide) How to start a tech blog FAST with Hexo
 date: 2024-06-29 14:15:29
 tags: blogging
 ---

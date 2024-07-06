@@ -1,5 +1,5 @@
 ---
-title: How to Enable End to End Encryption Between Cloudflare and Github Pages
+title: (Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages
 tags:
     - encryption
     - web hosting

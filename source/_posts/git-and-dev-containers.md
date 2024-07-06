@@ -1,13 +1,13 @@
 ---
-title: Understanding Navigating Git in a dev container
+title: (Guide) Understanding Navigating Git in a dev container
 tags:
-  - devops
-  - containers
-  - docker
-  - ssh-agent
+    - devops
+    - containers
+    - docker
+    - ssh-agent
+    - git
 date: 2024-07-04 04:21:29
 ---
-
 
 ## Background
 
@@ -32,9 +32,11 @@ There are two ways to use git through a dev container. The first way involves gi
 The first thing is to actually make sure git is installed in your image. Lots of images come with git, but if they don't, you may need to add a line into your Dockerfile
 
 <!-- Debian Based Distros -->
+
 `apt-get install -y vim git`
 
 <!-- RPM Based Distros -->
+
 `dnf install git`
 
 From the official documentation:
@@ -70,6 +72,7 @@ This credential helper is responsible for some pretty magical things.
 If you are not using a credential helper, or do not wish to use one, we can still securely work within a dev container through ssh user agent forwarding.
 
 ### Git and Dev Containers Method 2: SSH User Agent Forwarding
+
 In the advanced section of `sharing Git credentials with your container`, the documentation states:
 
 > There are some cases when you may be cloning your repository using SSH keys instead of a credential helper. To enable this scenario, the extension will automatically forward your local SSH agent if one is running.
@@ -100,7 +103,7 @@ Host myServer
   AddKeysToAgent yes
 ```
 
-- when logged into a remote system, you can verify that the agent is being forwarded correctly by checking that the key in memory matches both locally and remotely: `ssh-add -l`
+-   when logged into a remote system, you can verify that the agent is being forwarded correctly by checking that the key in memory matches both locally and remotely: `ssh-add -l`
 
 ```bash
 local@dev $ ssh-add -l
@@ -110,6 +113,7 @@ local@dev $ ssh-add -l
 remote@9726a2548ae8:/app# ssh-add -l
 256 SHA256:/pARi... (email) (encryption)
 ```
+
 -   when using git commands (specifically push, pull, clone, fetch), it actually runs the system's ssh, which in turn leverages the agent for message signing and authentication!
 
 By this point, hopefully it works. If not, perhaps the below will help you debug:
@@ -167,4 +171,3 @@ Already up to date.
 ## Conclusion
 
 Copying over your private keys breaks a core principle of security--private keys should never leave your system. We also want to keep complexity to a minimum by not introducing private keys on a per-host basis, as this would not be feasible if you were tasked with working with numerous machines.
-
