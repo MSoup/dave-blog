@@ -104,3 +104,5 @@ deploy:
     type: "git"
     repo: "git@personal.github.com:MSoup/dave-blog.git"
     branch: "gh-pages"
+    name: git
+    email: davenlu1989@gmail.com
