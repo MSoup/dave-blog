@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Text to Speech Serverless API",
+        "url": "https://github.com/MSoup/openai-tts-api",
+        "desc": "Openai's text-to-speech API wrapper - expose an API to dynamically generate audio clips into your own S3 bucket."
+    },
+    {
+        "name": "Font Awesome",
+        "url": "http://fontawesome.io/",
+        "desc": "The iconic font and CSS toolkit"
+    }
+]
