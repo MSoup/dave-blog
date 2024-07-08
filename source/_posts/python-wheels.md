@@ -34,8 +34,8 @@ Breaking this down:
 -   openai is the package name
 -   1.30.1 is the package version
 -   py3 is the python tag. It supported any Python 3 version (although the dependencies pulled in might not! This is the most common source of dependency errors)
--   none is the ABI tag - ABI means `application binary interface` and this tag represents the compatibility with python versions and implementations
--   any is the platform - it will work on any platform
+-   none is the ABI tag - ABI means `application binary interface`
+-   any is the platform tag - it will work on any platform
 
 ## Why Use Wheels?
 
@@ -114,7 +114,7 @@ env OPENSSL_DIR="$(brew --prefix openssl@3)" pip install cryptography
 
 ## Caveats When Building Lambdas
 
-When building a [lambda](https://docs.aws.amazon.com/lambda/latest/dg/python-package.html) locally to upload to AWS, pip assumes you want to use wheels targetted to your local system and installs the corresponding wheel for it. However, your system is not necessarily the same as the target system on AWS. This can lead to very cryptic errors.
+When building a [lambda](https://docs.aws.amazon.com/lambda/latest/dg/python-package.html) locally to upload to AWS, pip assumes you want to use wheels targetted to your local system and installs the corresponding wheel for it. However, your system is not necessarily the same as the target system on AWS. Many libraries like `requests` have an `any` tag for the target platform, which means it should work. However, it's entirely possible that your system packages the wrong wheels. This can lead to very cryptic errors, so be sure to watch your package manager (pip) installation logs, as sometimes, fetching the correct wheel requires specifying the correct platform.
 
 The solution is tucked away in the above AWS documentation:
 
@@ -126,7 +126,9 @@ The solution is tucked away in the above AWS documentation:
 > -   Choose the version of the package you want to use.
 > -   Choose Download files.
 
-Normally, fetching the correct wheel requires specifying the correct platform. It will usually be `manylinux2014_x86_64`, but be sure to double check what is available on pypi.
+The platform will usually be `manylinux_x_y_z`, where x and y are glibc major and minor versions supported (ie: `manylinux_2_24_xxx` should only work on distros using glibc 2.24+) and z is the architecture, like x86_64 or aarch64. Other forms of `manylinux` include manylinux1 (glibc 2.5 on x86_64 and i686 architectures), manylinux2010 (glibc 2.12 on x86_64 and i686), and manylinux2014 supports glibc 2.17 on x86_64, i686, aarch64, armv7l, ppc64, ppc64le, and s390x.
+
+Caution: when using Amazon Linux 2023 as a base image to run container-based Lambda functions, `manylinux2010_x86_64` and `manylinux2014_x86_64` will fail. The version of glibc in the AL2023 base image has been upgraded to 2.34, from 2.26 that was bundled in the AL2 base image.
 
 ```bash
 pip install \
