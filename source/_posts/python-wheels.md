@@ -19,13 +19,13 @@ Python Wheels were introduced in 2012 in [PEP 427](https://peps.python.org/pep-0
 
 Wheels are broken down into tags, like:
 
-```
+```bash
 {dist}-{version}(-{build})?-{python}-{abi}-{platform}.whl
 ```
 
 An example might be:
 
-```
+```bash
 openai-1.30.1-py3-none-any.whl
 ```
 
@@ -52,7 +52,7 @@ When installing from source distributions, sometimes you miss prerequisites need
 
 When a wheel is available, an install command might look as simple as:
 
-```bash
+```bash Installing a cross compatible wheel
 % pip install openai
 Downloading openai-1.30.1-py3-none-any.whl (320 kB)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 320.6/320.6 kB 1.1 MB/s eta 0:00:00
@@ -75,7 +75,7 @@ Successfully installed annotated-types-0.6.0 anyio-4.3.0 certifi-2024.2.2 distro
 
 or
 
-```bash
+```bash Installing a wheel based on my system, note the macosx_10_12_universal2
 % pip install cryptography
 
 Collecting cryptography
@@ -95,7 +95,7 @@ Successfully installed cffi-1.16.0 cryptography-42.0.7 pycparser-2.22
 
 Without wheels, compiling `cryptography` yourself requires a C compiler, a Rust compiler, headers for Python (if you’re not using `pypy`), and headers for the OpenSSL and `libffi` libraries available on your system. The onus is on you to have everything in place when installing from a source distribution. The installation might look like:
 
-```bash
+```bash Install dependencies manually before installing from a source distribution
 // Alpine
 sudo apk add gcc musl-dev python3-dev libffi-dev openssl-dev cargo pkgconfig
 
@@ -130,7 +130,7 @@ The platform will usually be `manylinux_x_y_z`, where x and y are glibc major an
 
 Caution: when using Amazon Linux 2023 as a base image to run container-based Lambda functions, `manylinux2010_x86_64` and `manylinux2014_x86_64` will fail. The version of glibc in the AL2023 base image has been upgraded to 2.34, from 2.26 that was bundled in the AL2 base image.
 
-```bash
+```bash Note the manylinux2014_x86_64
 pip install \
 --platform manylinux2014_x86_64 \
 --target=package \
@@ -142,7 +142,7 @@ pip install \
 
 For arm64
 
-```bash
+```bash Note the manylinux2014_aarch64
 pip install \
 --platform manylinux2014_aarch64 \
 --target=package \
@@ -154,14 +154,16 @@ pip install \
 
 For [lambda layers](https://docs.aws.amazon.com/lambda/latest/dg/python-layers.html), AWS explicitly states:
 
-> Because Lambda functions run on Amazon Linux, your layer content must be able to compile and build in a Linux environment.
-> In Python, most packages are available as wheels (.whl files) in addition to the source distribution. Each wheel is a type of built distribution that supports a specific combination of Python versions, operating systems, and machine instruction sets.
-> Wheels are useful for ensuring that your layer is compatible with Amazon Linux. When you download your dependencies, download the universal wheel if possible. (By default, pip installs the universal wheel if one is available.) The universal wheel contains any as the platform tag, indicating that it's compatible with all platforms, including Amazon Linux.
+Because Lambda functions run on Amazon Linux, your layer content must be able to compile and build in a Linux environment.
+
+In Python, most packages are available as wheels (.whl files) in addition to the source distribution. Each wheel is a type of built distribution that supports a specific combination of Python versions, operating systems, and machine instruction sets.
+
+Wheels are useful for ensuring that your layer is compatible with Amazon Linux. When you download your dependencies, download the universal wheel if possible. (By default, pip installs the universal wheel if one is available.) The universal wheel contains any as the platform tag, indicating that it's compatible with all platforms, including Amazon Linux.
 
 However...
 
-> Not all Python packages are distributed as universal wheels. For example, numpy has multiple wheel distributions, each supporting a different set of platforms. For such packages, download the manylinux distribution to ensure compatibility with Amazon Linux. For detailed instructions about how to package such layers, see Working with manylinux wheel distributions.
+Not all Python packages are distributed as universal wheels. For example, numpy has multiple wheel distributions, each supporting a different set of platforms. For such packages, download the manylinux distribution to ensure compatibility with Amazon Linux. For detailed instructions about how to package such layers, see [Working with manylinux wheel distributions](https://docs.aws.amazon.com/lambda/latest/dg/python-layers.html#python-layer-manylinux).
 
-> In rare cases, a Python package might not be available as a wheel. If only the source distribution (sdist) exists, then we recommend installing and packaging your dependencies in a Docker environment based on the Amazon Linux 2023 base container image. We also recommend this approach if you want to include your own custom libraries written in other languages such as C/C++. This approach mimics the Lambda execution environment in Docker, and ensures that your non-Python package dependencies are compatible with Amazon Linux.
+In rare cases, a Python package might not be available as a wheel. If only the source distribution (sdist) exists, then we recommend installing and packaging your dependencies in a Docker environment based on the Amazon Linux 2023 base container image. We also recommend this approach if you want to include your own custom libraries written in other languages such as C/C++. This approach mimics the Lambda execution environment in Docker, and ensures that your non-Python package dependencies are compatible with Amazon Linux.
 
 Understanding wheels will make your life easier, especially in the cases of troubleshooting Python dependencies.

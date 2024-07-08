@@ -3,5 +3,10 @@
         "name": "Text to Speech Serverless API",
         "url": "https://github.com/MSoup/openai-tts-api",
         "desc": "Openai's text-to-speech API wrapper - expose an API to dynamically generate audio clips into your own S3 bucket."
+    },
+    {
+        "name": "Public Github",
+        "url": "https://github.com/MSoup",
+        "desc": "Sometimes I publish things"
     }
 ]
