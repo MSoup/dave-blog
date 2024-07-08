@@ -9,7 +9,18 @@ tags:
 categories:
 ---
 
-This post is a summary of a deep dive I did on Python wheels.
+This post is a summary of some reading I did on Python wheels.
+
+## Background
+
+When I was building a project on Lambda, I had a small hiccup where my dependencies worked locally, but on my lambda environment, I was getting a dependency error:
+
+```
+[ERROR] Runtime.ImportModuleError: Unable to import module 'app': No module named 'pydantic_core._pydantic_core'
+Traceback (most recent call last):
+```
+
+The issue happened to be that pip was installing the wheel for macos but lambda required a linux binary!
 
 ## What are Python Wheels?
 
@@ -116,6 +127,8 @@ env OPENSSL_DIR="$(brew --prefix openssl@3)" pip install cryptography
 
 When building a [lambda](https://docs.aws.amazon.com/lambda/latest/dg/python-package.html) locally to upload to AWS, pip assumes you want to use wheels targetted to your local system and installs the corresponding wheel for it. However, your system is not necessarily the same as the target system on AWS. Many libraries like `requests` have an `any` tag for the target platform, which means it should work. However, it's entirely possible that your system packages the wrong wheels. This can lead to very cryptic errors, so be sure to watch your package manager (pip) installation logs, as sometimes, fetching the correct wheel requires specifying the correct platform.
 
+### Ensure the correct platform
+
 The solution is tucked away in the above AWS documentation:
 
 > To make your deployment package compatible with Lambda, you install the wheel for Linux operating systems and your function’s instruction set architecture.
@@ -152,6 +165,12 @@ pip install \
 <package_name>
 ```
 
+### Ensure no environment mismatch
+
+If you are running python 3.12 and your lambda is on 3.9, you may unintentionally pull the 3.12 wheel, leading to the wrong dependency in your lambda environment.
+
+### Lambda Layers
+
 For [lambda layers](https://docs.aws.amazon.com/lambda/latest/dg/python-layers.html), AWS explicitly states:
 
 Because Lambda functions run on Amazon Linux, your layer content must be able to compile and build in a Linux environment.
@@ -166,4 +185,8 @@ Not all Python packages are distributed as universal wheels. For example, numpy 
 
 In rare cases, a Python package might not be available as a wheel. If only the source distribution (sdist) exists, then we recommend installing and packaging your dependencies in a Docker environment based on the Amazon Linux 2023 base container image. We also recommend this approach if you want to include your own custom libraries written in other languages such as C/C++. This approach mimics the Lambda execution environment in Docker, and ensures that your non-Python package dependencies are compatible with Amazon Linux.
 
+## Conclusion
+
 Understanding wheels will make your life easier, especially in the cases of troubleshooting Python dependencies.
+
+If you are troubleshooting dependencies on lambda and are still stuck, [this thread](https://github.com/pydantic/pydantic/issues/6557) may also give you some hints.
