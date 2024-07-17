@@ -15,7 +15,7 @@ This post is a summary of some reading I did on Python wheels.
 
 When I was building a project on Lambda, I had a small hiccup where my dependencies worked locally, but on my lambda environment, I was getting a dependency error:
 
-```
+```bash
 [ERROR] Runtime.ImportModuleError: Unable to import module 'app': No module named 'pydantic_core._pydantic_core'
 Traceback (most recent call last):
 ```
@@ -63,7 +63,7 @@ When installing from source distributions, sometimes you miss prerequisites need
 
 When a wheel is available, an install command might look as simple as:
 
-```bash Installing a cross compatible wheel
+```bash
 % pip install openai
 Downloading openai-1.30.1-py3-none-any.whl (320 kB)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 320.6/320.6 kB 1.1 MB/s eta 0:00:00
@@ -86,7 +86,8 @@ Successfully installed annotated-types-0.6.0 anyio-4.3.0 certifi-2024.2.2 distro
 
 or
 
-```bash Installing a wheel based on my system, note the macosx_10_12_universal2
+```bash
+# Installing a wheel based on my system, note the macosx_10_12_universal2
 % pip install cryptography
 
 Collecting cryptography
@@ -106,7 +107,8 @@ Successfully installed cffi-1.16.0 cryptography-42.0.7 pycparser-2.22
 
 Without wheels, compiling `cryptography` yourself requires a C compiler, a Rust compiler, headers for Python (if you’re not using `pypy`), and headers for the OpenSSL and `libffi` libraries available on your system. The onus is on you to have everything in place when installing from a source distribution. The installation might look like:
 
-```bash Install dependencies manually before installing from a source distribution
+```bash
+# Install dependencies manually before installing from a source distribution
 // Alpine
 sudo apk add gcc musl-dev python3-dev libffi-dev openssl-dev cargo pkgconfig
 
@@ -143,7 +145,7 @@ The platform will usually be `manylinux_x_y_z`, where x and y are glibc major an
 
 Caution: when using Amazon Linux 2023 as a base image to run container-based Lambda functions, `manylinux2010_x86_64` and `manylinux2014_x86_64` will fail. The version of glibc in the AL2023 base image has been upgraded to 2.34, from 2.26 that was bundled in the AL2 base image.
 
-```bash Note the manylinux2014_x86_64
+```bash
 pip install \
 --platform manylinux2014_x86_64 \
 --target=package \
@@ -155,7 +157,7 @@ pip install \
 
 For arm64
 
-```bash Note the manylinux2014_aarch64
+```bash
 pip install \
 --platform manylinux2014_aarch64 \
 --target=package \
