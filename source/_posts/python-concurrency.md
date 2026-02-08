@@ -115,6 +115,30 @@ print(f"Total time: {time.time() - start:.2f}s")
 
 This also finishes in roughly **1 second**. Each thread runs `requests.get()` and blocks — but since they're separate threads, the OS can switch between them while they wait on I/O. The `concurrent.futures` module gives us `ThreadPoolExecutor`, which manages a pool of threads and distributes work across them.
 
+One thing to watch out for: if your threads write to shared data, you need a lock to avoid race conditions:
+
+```python
+import threading
+
+counter = 0
+lock = threading.Lock()
+
+def increment():
+    global counter
+    for _ in range(100_000):
+        with lock:  # only one thread can enter at a time
+            counter += 1
+
+t1 = threading.Thread(target=increment)
+t2 = threading.Thread(target=increment)
+t1.start(); t2.start()
+t1.join(); t2.join()
+
+print(counter)  # 200000 (correct, thanks to the lock)
+```
+
+Without the lock, you'd get race conditions and an incorrect count. This is one area where asyncio has an advantage — since only one coroutine runs at a time within the event loop, you don't need locks for shared state.
+
 ## Threading vs asyncio
 
 Both solve the same problem here, so which should you use?
