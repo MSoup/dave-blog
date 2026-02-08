@@ -7,3 +7,5 @@ public/
 .deploy*/
 _multiconfig.yml
 deploy.sh
+
+CLAUDE.md
