@@ -5,13 +5,14 @@ tags:
     - Python
     - Concurrency
     - asyncio
+    - threading
 categories:
     - Guides
 ---
 
 If you've ever written a script that makes a bunch of HTTP requests one at a time and thought "this is painfully slow," this post is for you.
 
-We're going to take a slow, synchronous script and make it fast using Python's `asyncio`. 
+We're going to take a slow, synchronous script and make it fast using Python's `asyncio` and `threading`, and talk about when to reach for each.
 
 ## Scenario
 
@@ -88,6 +89,47 @@ Let's walk through this step by step:
 
 The key insight: **`await` is not `time.sleep()`.** When you `await` something, you're telling the event loop "I'm waiting on I/O, go do something else in the meantime." That's what makes it concurrent.
 
+## The Other Option: Threading
+
+`asyncio` isn't the only way to do this. Python's `threading` module can solve the same problem, and you don't need to change your HTTP library:
+
+```python
+import requests
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+urls = [f"https://httpbin.org/delay/1" for _ in range(10)]
+
+def fetch(url):
+    response = requests.get(url)
+    print(f"Status: {response.status_code}")
+    return response.status_code
+
+start = time.time()
+
+with ThreadPoolExecutor(max_workers=10) as executor:
+    results = list(executor.map(fetch, urls))
+
+print(f"Total time: {time.time() - start:.2f}s")
+```
+
+This also finishes in roughly **1 second**. Each thread runs `requests.get()` and blocks — but since they're separate threads, the OS can switch between them while they wait on I/O. The `concurrent.futures` module gives us `ThreadPoolExecutor`, which manages a pool of threads and distributes work across them.
+
+## Threading vs asyncio
+
+Both solve the same problem here, so which should you use?
+
+**Threading** is simpler when you're retrofitting existing synchronous code. You keep using `requests`, `psycopg2`, or whatever blocking library you already have. Just wrap the calls in a thread pool and you're done. The mental model is straightforward: each thread runs your normal code, and the OS handles the switching.
+
+**asyncio** scales better. Threads have real overhead — each one consumes memory for its stack, and the OS scheduler has to manage context switches between them. If you're making 10 requests, this doesn't matter. If you're making 10,000, threading starts to struggle while asyncio handles it comfortably because coroutines are much lighter than OS threads.
+
+The tradeoff in practice:
+
+- **Threading**: works with any existing library, easier to reason about, fine for moderate concurrency (dozens to low hundreds of tasks)
+- **asyncio**: requires async-compatible libraries (`aiohttp` instead of `requests`), but handles massive concurrency with less overhead
+
+There's also the GIL to consider. Python's Global Interpreter Lock means threads can't run Python code in true parallel — but this doesn't matter for I/O-bound work because threads release the GIL while waiting on network/disk operations. The GIL only becomes a problem for CPU-bound threading, which is why `multiprocessing` exists.
+
 ## When to Use This (and When Not To)
 
 **Use asyncio for I/O-bound work:**
@@ -109,14 +151,17 @@ A few things that trip people up:
 - **You can't mix `requests` with `asyncio` easily.** The `requests` library is synchronous and will block the event loop. Use `aiohttp` instead, or wrap synchronous calls with `asyncio.to_thread()`.
 - **`asyncio.run()` can only be called once.** It creates and destroys an event loop. If you're inside a framework that already has a loop (like FastAPI), just `await` directly.
 - **Error handling works normally.** Wrap your `await` calls in try/except just like synchronous code.
+- **Threads and shared state don't mix well.** If your threads write to the same data structure, you'll need locks. asyncio avoids this entirely because only one coroutine runs at a time within the event loop.
+- **Don't create unlimited threads.** Always use a pool (`ThreadPoolExecutor`) instead of spawning a thread per task. Thousands of threads will eat your memory and slow things down.
 
 ## Summary
 
-| | Synchronous | Concurrent (asyncio) |
-|---|---|---|
-| 10 requests @ 1s each | ~10 seconds | ~1 second |
-| How it works | One at a time, blocking | All in flight, non-blocking |
-| Good for | Simple scripts | Many I/O operations |
+| | Synchronous | Threading | asyncio |
+|---|---|---|---|
+| 10 requests @ 1s each | ~10 seconds | ~1 second | ~1 second |
+| How it works | One at a time, blocking | Multiple OS threads, blocking per thread | Single thread, non-blocking event loop |
+| Existing library support | Everything | Everything | Needs async libraries |
+| Good for | Simple scripts | Moderate concurrency, retrofitting sync code | High concurrency, greenfield async code |
 
 
 ## Resources
