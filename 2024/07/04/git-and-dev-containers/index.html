@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="BackgroundWhen using dev containers for development, it’s important that we can use git commands while still inside the container. Without this ability, we would have to exit the container before usin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(Guide) Understanding Navigating Git in a dev container">
+<meta property="og:url" content="https://cloudsoup.net/2024/07/04/git-and-dev-containers/index.html">
+<meta property="og:site_name" content="MajesticSoup">
+<meta property="og:description" content="BackgroundWhen using dev containers for development, it’s important that we can use git commands while still inside the container. Without this ability, we would have to exit the container before usin">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-03T19:21:29.000Z">
+<meta property="article:modified_time" content="2026-02-08T03:53:15.294Z">
+<meta property="article:author" content="Dave">
+<meta property="article:tag" content="devops">
+<meta property="article:tag" content="containers">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="ssh-agent">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>(Guide) Understanding Navigating Git in a dev container</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/07/06/writing-good-commit-messages/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2024/07/04/git-and-dev-containers/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&text=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&is_video=false&description=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=(Guide) Understanding Navigating Git in a dev container&body=Check out this article: https://cloudsoup.net/2024/07/04/git-and-dev-containers/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&name=(Guide) Understanding Navigating Git in a dev container&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&t=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Setting-up-Git-Credentials-in-a-Dev-Container"><span class="toc-number">2.</span> <span class="toc-text">Setting up Git Credentials in a Dev Container</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Git-and-Dev-Containers-Method-1-Credential-Helper"><span class="toc-number">2.1.</span> <span class="toc-text">Git and Dev Containers Method 1: Credential Helper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Git-and-Dev-Containers-Method-2-SSH-User-Agent-Forwarding"><span class="toc-number">2.2.</span> <span class="toc-text">Git and Dev Containers Method 2: SSH User Agent Forwarding</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What-are-SSH-Agents"><span class="toc-number">3.</span> <span class="toc-text">What are SSH Agents?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Agent-Forwarding"><span class="toc-number">4.</span> <span class="toc-text">User Agent Forwarding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pitfalls"><span class="toc-number">5.</span> <span class="toc-text">Pitfalls</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">6.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        (Guide) Understanding Navigating Git in a dev container
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Dave</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-07-03T19:21:29.000Z" class="dt-published" itemprop="datePublished">2024-07-04</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Guides/">Guides</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/containers/" rel="tag">containers</a>, <a class="p-category" href="/tags/devops/" rel="tag">devops</a>, <a class="p-category" href="/tags/docker/" rel="tag">docker</a>, <a class="p-category" href="/tags/git/" rel="tag">git</a>, <a class="p-category" href="/tags/ssh-agent/" rel="tag">ssh-agent</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>When using dev containers for development, it’s important that we can use git commands while still inside the container. Without this ability, we would have to exit the container before using git commands, which would be quite cumbersome.</p>
+<p>On <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/devcontainers/containers">VS Code’s website</a>, they state:</p>
+<blockquote>
+<p>Working with Git?<br>Here are two tips to consider:<br>If you are working with the same repository both locally in Windows and inside a container, be sure to set up consistent line endings. <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/remote/troubleshooting#_resolving-git-line-ending-issues-in-wsl-resulting-in-many-modified-files">See tips and tricks for details.</a></p>
+</blockquote>
+<blockquote>
+<p>If you clone using a Git credential manager, your container should already have access to your credentials! If you use SSH keys, you can also opt in to sharing them. See <a target="_blank" rel="noopener" href="https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials">Sharing Git credentials with your container for details.</a></p>
+</blockquote>
+<p>There is a chance that git will just work out of the box, but this has not been my case. This article will explain my experiences and how to avoid my own pitfalls.</p>
+<h2 id="Setting-up-Git-Credentials-in-a-Dev-Container"><a href="#Setting-up-Git-Credentials-in-a-Dev-Container" class="headerlink" title="Setting up Git Credentials in a Dev Container"></a>Setting up Git Credentials in a Dev Container</h2><p>There are two ways to use git through a dev container. The first way involves git’s credential helper.</p>
+<h3 id="Git-and-Dev-Containers-Method-1-Credential-Helper"><a href="#Git-and-Dev-Containers-Method-1-Credential-Helper" class="headerlink" title="Git and Dev Containers Method 1: Credential Helper"></a>Git and Dev Containers Method 1: Credential Helper</h3><p>The first thing is to actually make sure git is installed in your image. Lots of images come with git, but if they don’t, you may need to add a line into your Dockerfile</p>
+<!-- Debian Based Distros -->
+
+<p><code>apt-get install -y vim git</code></p>
+<!-- RPM Based Distros -->
+
+<p><code>dnf install git</code></p>
+<p>From the official documentation:</p>
+<blockquote>
+<p>If you use HTTPS to clone your repositories and have a credential helper configured in your local OS, no further setup is required. Credentials you’ve entered locally will be reused in the container and vice versa.</p>
+</blockquote>
+<p>You can visually check to see the credential helper in action: from within your container, type in <code>git config --list</code></p>
+<p>You should see something like…</p>
+<p><code>credential.helper=!f() &#123; stuff here &#125;</code></p>
+<p>This was inserted by the dev containers extension through VS Code. Let’s dig deeper:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.gitconfig</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">[credential]</span><br><span class="line">	helper = &quot;!f() &#123; ...stuff here... &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>This credential helper is responsible for some pretty magical things.</p>
+<ul>
+<li>When you run a git command that needs authentication, git inside the container requests credentials</li>
+<li>The git credential helper set up by VS Code intercepts this request</li>
+<li>The credential helper communicates with the VS Code server process running in the container</li>
+<li>This server process then communicates with the VS Code client on your host machine.</li>
+<li>The VS Code client on your host machine interacts with your local SSH agent to get the necessary credentials</li>
+<li>These credentials are then passed back through the chain to authenticate your git operation</li>
+</ul>
+<p>If you are not using a credential helper, or do not wish to use one, we can still securely work within a dev container through ssh user agent forwarding.</p>
+<h3 id="Git-and-Dev-Containers-Method-2-SSH-User-Agent-Forwarding"><a href="#Git-and-Dev-Containers-Method-2-SSH-User-Agent-Forwarding" class="headerlink" title="Git and Dev Containers Method 2: SSH User Agent Forwarding"></a>Git and Dev Containers Method 2: SSH User Agent Forwarding</h3><p>In the advanced section of <code>sharing Git credentials with your container</code>, the documentation states:</p>
+<blockquote>
+<p>There are some cases when you may be cloning your repository using SSH keys instead of a credential helper. To enable this scenario, the extension will automatically forward your local SSH agent if one is running.</p>
+</blockquote>
+<p>This is quite convenient! For those who may not be familiar with SSH user agent forwarding, let’s explore SSH Agents in more detail.</p>
+<h2 id="What-are-SSH-Agents"><a href="#What-are-SSH-Agents" class="headerlink" title="What are SSH Agents?"></a>What are SSH Agents?</h2><p>An SSH Agent is nothing more than a key manager for SSH. Keys are held in memory and are used for signing messages. Throwing keys into the agent is as simple as <code>ssh-add $HOME/.ssh/&lt;your ssh key&gt;</code>.</p>
+<p>When you connect to some remote server (your container in this scenario), the SSH client authenticates via the agent.</p>
+<p>There is one particular feature that makes developing within containers secure and possible: SSH user agent forwarding.</p>
+<h2 id="User-Agent-Forwarding"><a href="#User-Agent-Forwarding" class="headerlink" title="User Agent Forwarding"></a>User Agent Forwarding</h2><p>SSH user agent forwarding enables developers to use keys on remote systems without needing to copy the keys over from their local machine to their remote. In other words, a remote host is able to effectively borrow your private keys, without your private keys actually being exposed or leaving your local system.</p>
+<p>To achieve this, you:</p>
+<ul>
+<li>enable agent forwarding when connecting to the first remote server (docker container in this case). It might be as simple as setting it in your .ssh&#x2F;config, like:</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">  AddKeysToAgent <span class="built_in">yes</span></span><br><span class="line"></span><br><span class="line">Host myServer</span><br><span class="line">  AddKeysToAgent <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>when logged into a remote system, you can verify that the agent is being forwarded correctly by checking that the key in memory matches both locally and remotely: <code>ssh-add -l</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">local</span>@dev $ ssh-add -l</span><br><span class="line">256 SHA256:/pARi... (email) (encryption)</span><br><span class="line"></span><br><span class="line">(from dev container)</span><br><span class="line">remote@9726a2548ae8:/app<span class="comment"># ssh-add -l</span></span><br><span class="line">256 SHA256:/pARi... (email) (encryption)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>when using git commands (specifically push, pull, clone, fetch), it actually runs the system’s ssh, which in turn leverages the agent for message signing and authentication!</li>
+</ul>
+<p>By this point, hopefully it works. If not, perhaps the below will help you debug:</p>
+<h2 id="Pitfalls"><a href="#Pitfalls" class="headerlink" title="Pitfalls"></a>Pitfalls</h2><p>One pitfall was that I had a remote with a URL that looked like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@9726a2548ae8:/app# git remote -v</span><br><span class="line">origin  git@personal.github.com:&lt;name&gt;/&lt;repo&gt;.git (fetch)</span><br><span class="line">origin  git@personal.github.com:&lt;name&gt;/&lt;repo&gt;.git (push)</span><br></pre></td></tr></table></figure>
+
+<p>When I tried using git push &#x2F; git pull &#x2F; git fetch &#x2F; etc, it seemed to just.. hang.</p>
+<p>To discover the culprit, I ran<br><code>GIT_TRACE=true git pull</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@9726a2548ae8:/app# GIT_TRACE=true git pull</span><br><span class="line">02:16:17.326891 git.c:460               trace: built-in: git pull</span><br><span class="line">02:16:17.351613 run-command.c:655       trace: run_command: git fetch --update-head-ok</span><br><span class="line">02:16:17.359033 git.c:460               trace: built-in: git fetch --update-head-ok</span><br><span class="line">02:16:17.391809 run-command.c:655       trace: run_command: unset GIT_PREFIX; GIT_PROTOCOL=version=2 ssh -o SendEnv=GIT_PROTOCOL git@personal.github.com &#x27;git-upload-pack &#x27;\&#x27;&#x27;&lt;user&gt;/&lt;repo&gt;.git&#x27;\&#x27;&#x27;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>And that’s where it occured to me that git has no idea what to do with the host <code>personal.github.com</code>. The ssh-agent knows nothing about how it should handle this!</p>
+<p>So I went into <code>~/.ssh/config</code> and added this entry:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Host personal.github.com</span><br><span class="line">  HostName github.com</span><br></pre></td></tr></table></figure>
+
+<p>And everything fell into place.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">root@9726a2548ae8:/app<span class="comment"># GIT_TRACE=true git pull</span></span><br><span class="line">02:21:23.413813 git.c:460               trace: built-in: git pull</span><br><span class="line">02:21:23.433939 run-command.c:655       trace: run_command: git fetch --update-head-ok</span><br><span class="line">02:21:23.442161 git.c:460               trace: built-in: git fetch --update-head-ok</span><br><span class="line">02:21:23.473589 run-command.c:655       trace: run_command: <span class="built_in">unset</span> GIT_PREFIX; GIT_PROTOCOL=version=2 ssh -o SendEnv=GIT_PROTOCOL git@personal.github.com <span class="string">&#x27;git-upload-pack &#x27;</span>\&#x27;<span class="string">&#x27;&lt;user&gt;/&lt;repo&gt;.git&#x27;</span>\&#x27;<span class="string">&#x27;&#x27;</span></span><br><span class="line">02:21:25.392300 run-command.c:655       trace: run_command: git rev-list --objects --stdin --not --all --quiet --alternate-refs</span><br><span class="line">02:21:25.626777 run-command.c:1523      run_processes_parallel: preparing to run up to 1 tasks</span><br><span class="line">02:21:25.628426 run-command.c:1551      run_processes_parallel: <span class="keyword">done</span></span><br><span class="line">02:21:25.628455 run-command.c:655       trace: run_command: git maintenance run --auto --no-quiet</span><br><span class="line">02:21:25.635209 git.c:460               trace: built-in: git maintenance run --auto --no-quiet</span><br><span class="line">02:21:25.666329 run-command.c:655       trace: run_command: git merge FETCH_HEAD</span><br><span class="line">02:21:25.674428 git.c:460               trace: built-in: git merge FETCH_HEAD</span><br><span class="line">Already up to <span class="built_in">date</span>.</span><br></pre></td></tr></table></figure>
+
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Copying over your private keys breaks a core principle of security–private keys should never leave your system. We also want to keep complexity to a minimum by not introducing private keys on a per-host basis, as this would not be feasible if you were tasked with working with numerous machines.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Setting-up-Git-Credentials-in-a-Dev-Container"><span class="toc-number">2.</span> <span class="toc-text">Setting up Git Credentials in a Dev Container</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Git-and-Dev-Containers-Method-1-Credential-Helper"><span class="toc-number">2.1.</span> <span class="toc-text">Git and Dev Containers Method 1: Credential Helper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Git-and-Dev-Containers-Method-2-SSH-User-Agent-Forwarding"><span class="toc-number">2.2.</span> <span class="toc-text">Git and Dev Containers Method 2: SSH User Agent Forwarding</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What-are-SSH-Agents"><span class="toc-number">3.</span> <span class="toc-text">What are SSH Agents?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Agent-Forwarding"><span class="toc-number">4.</span> <span class="toc-text">User Agent Forwarding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pitfalls"><span class="toc-number">5.</span> <span class="toc-text">Pitfalls</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">6.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2024/07/04/git-and-dev-containers/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&text=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&is_video=false&description=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=(Guide) Understanding Navigating Git in a dev container&body=Check out this article: https://cloudsoup.net/2024/07/04/git-and-dev-containers/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&title=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&name=(Guide) Understanding Navigating Git in a dev container&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2024/07/04/git-and-dev-containers/&t=(Guide) Understanding Navigating Git in a dev container"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2026
+    Dave
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

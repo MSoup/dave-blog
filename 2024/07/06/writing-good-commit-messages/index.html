@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Recently, our team expanded with the addition of several platform engineers. During onboarding, a colleague proposed adopting a standardized commit message format. This suggestion prompted me to inves">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Writing good commit messages">
+<meta property="og:url" content="https://cloudsoup.net/2024/07/06/writing-good-commit-messages/index.html">
+<meta property="og:site_name" content="MajesticSoup">
+<meta property="og:description" content="Recently, our team expanded with the addition of several platform engineers. During onboarding, a colleague proposed adopting a standardized commit message format. This suggestion prompted me to inves">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-06T02:51:49.000Z">
+<meta property="article:modified_time" content="2026-02-08T03:53:15.294Z">
+<meta property="article:author" content="Dave">
+<meta property="article:tag" content="git">
+<meta property="article:tag" content="version control">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Writing good commit messages</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/07/07/python-wheels/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/07/04/git-and-dev-containers/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&text=Writing good commit messages"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&is_video=false&description=Writing good commit messages"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Writing good commit messages&body=Check out this article: https://cloudsoup.net/2024/07/06/writing-good-commit-messages/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&name=Writing good commit messages&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&t=Writing good commit messages"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Advantages-to-Adhering-to-Guidelines"><span class="toc-number">1.</span> <span class="toc-text">Advantages to Adhering to Guidelines</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Higher-Team-Velocity-Through-Faster-Information-Retrieval"><span class="toc-number">1.1.</span> <span class="toc-text">Higher Team Velocity Through Faster Information Retrieval</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Leveraging-Automation-Tools"><span class="toc-number">1.2.</span> <span class="toc-text">Leveraging Automation Tools</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Conventional-Commits-Specification"><span class="toc-number">2.</span> <span class="toc-text">The Conventional Commits Specification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Should-You-Follow-It"><span class="toc-number">3.</span> <span class="toc-text">Should You Follow It?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Google-Engineering-Practices-Documentation"><span class="toc-number">4.</span> <span class="toc-text">Google Engineering Practices Documentation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">5.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Writing good commit messages
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Dave</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-07-06T02:51:49.000Z" class="dt-published" itemprop="datePublished">2024-07-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/git/" rel="tag">git</a>, <a class="p-category" href="/tags/version-control/" rel="tag">version control</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>Recently, our team expanded with the addition of several platform engineers. During onboarding, a colleague proposed adopting a standardized commit message format. This suggestion prompted me to investigate Git best practices, particularly focusing on commit message conventions. My goal today is to share some of my findings.</p>
+<p>In this post I will not touch on <em>git commit guidelines</em>, as that’s another rabbit hole.</p>
+<p>I’ll start with a quote that stuck with me through the years:</p>
+<blockquote>
+<p>Re-establishing the context of a piece of code is wasteful. We can’t avoid it completely, so our efforts should go to <a target="_blank" rel="noopener" href="http://www.osnews.com/story/19266/WTFs_m">reducing it</a> to as small as possible. Commit messages can do exactly that and as a result, <em>a commit message shows whether a developer is a good collaborator</em>.</p>
+<ul>
+<li>Peter Hutterer</li>
+</ul>
+</blockquote>
+<h2 id="Advantages-to-Adhering-to-Guidelines"><a href="#Advantages-to-Adhering-to-Guidelines" class="headerlink" title="Advantages to Adhering to Guidelines"></a>Advantages to Adhering to Guidelines</h2><h3 id="Higher-Team-Velocity-Through-Faster-Information-Retrieval"><a href="#Higher-Team-Velocity-Through-Faster-Information-Retrieval" class="headerlink" title="Higher Team Velocity Through Faster Information Retrieval"></a>Higher Team Velocity Through Faster Information Retrieval</h3><p>Team velocity is significantly influenced by collaborative efficiency. Git is a distributed version control system designed to enable asynchronous collaboration. Through having a consistent set of guidelines, developers and maintainers acquire a reliable map – the project’s log, for streamlining their workflows. Without said guidelines, a project’s log might resemble something that looks like:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">A:</span><br><span class="line"></span><br><span class="line">fix bug where neighbor vacuums at 5am</span><br><span class="line">revert senior engineer&#x27;s lunch</span><br><span class="line">updated readme to add emojis</span><br><span class="line">WIP: new feature</span><br><span class="line">forgot to add file</span><br><span class="line">finalized feature</span><br><span class="line">rebase egg salad onto mcchicken</span><br></pre></td></tr></table></figure>
+
+<p>This lack of structure can impede productivity and hinder effective code review processes. Let’s compare it to a change log that has some semblance of structure:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">B:</span><br><span class="line"></span><br><span class="line">feat: add user authentication system</span><br><span class="line">fix: resolve memory leak in data processing module</span><br><span class="line">docs: update API documentation for new endpoints</span><br><span class="line">refactor: optimize database query performance</span><br><span class="line">test: add unit tests for payment gateway integration</span><br><span class="line">chore: update dependencies to latest versions</span><br></pre></td></tr></table></figure>
+
+<p>While the former might be okay if you’re the only engineer working on the codebase (though I’d argue that you’ll still forget what you did in half a year and the log won’t be helpful), the latter allows others to comb through the history more elegantly. Now developers can quickly search through change logs and get the information they need significantly quicker.</p>
+<h3 id="Leveraging-Automation-Tools"><a href="#Leveraging-Automation-Tools" class="headerlink" title="Leveraging Automation Tools"></a>Leveraging Automation Tools</h3><p>A side effect of the latter implementation is that many tools know how to read this format to automate change logs or even populate pull requests (thank you Bitbucket).</p>
+<p>By having a commit that looks like</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">doc: introduce documentation for /query endpoint</span><br><span class="line"></span><br><span class="line">- add swagger documentation</span><br></pre></td></tr></table></figure>
+
+<p>Opening a PR automatically populates both the title and body appropriately, and change logs can also get auto generated from the above format.</p>
+<h2 id="The-Conventional-Commits-Specification"><a href="#The-Conventional-Commits-Specification" class="headerlink" title="The Conventional Commits Specification"></a>The Conventional Commits Specification</h2><p>The Conventional Commits Specification is based heavily on the <a target="_blank" rel="noopener" href="https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines">Angular Commit Guidelines</a> , and is commonly used amongst teams to help keep commits as atomic and consistent as possible. This is achieved by having commits follow this standard:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;</span><br><span class="line">&lt;BLANK LINE&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;BLANK LINE&gt;</span><br><span class="line">&lt;footer&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Some Examples:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">## Simple</span><br><span class="line">fix: additional handling in parse_claude_response</span><br><span class="line"></span><br><span class="line">## Simple</span><br><span class="line">chore: fix one typo in directory name</span><br><span class="line"></span><br><span class="line">## Commit message with scope</span><br><span class="line">feat(lang): add Polish language</span><br><span class="line"></span><br><span class="line">## Commit message that includes a breaking change</span><br><span class="line">feat(api)!: send an email to the customer when a product is shipped</span><br></pre></td></tr></table></figure>
+
+<p>Visit the official <a target="_blank" rel="noopener" href="https://www.conventionalcommits.org/en/v1.0.0/#specification">Conventional Commits Specification Site</a> to read more about the different types, scopes, subject, body, and footer explanations.</p>
+<h2 id="Should-You-Follow-It"><a href="#Should-You-Follow-It" class="headerlink" title="Should You Follow It?"></a>Should You Follow It?</h2><p>Not necessarily!</p>
+<p>If your team already has a set of standards and guidelines, there’s nothing wrong with staying with what your team has already decided.</p>
+<p>It your team does not have a set of guidelines, it takes 15 minutes out of everyone’s day to learn and forever changes the way the project’s change logs look, hopefully for the better.</p>
+<p>The Conventional Commits Specification is not necessarily accepted by everyone–for example, even in 2024, many engineers have <a target="_blank" rel="noopener" href="https://www.reddit.com/r/git/comments/1bdfwsy/comment/kun8y67/">voiced their thoughts</a>:</p>
+<blockquote>
+<p>I don’t buy this conventional commit thing. I admit do look nice when you have a library and generate change log for it. But as an application developer, I write my commits for people, not for tools. In addition, my commits are not a feature or doc. A feature will most likely be many commits, and the docs will be written simultaneously.</p>
+</blockquote>
+<p>Another user says</p>
+<blockquote>
+<p>The only reason I see for conventional commits is if you would want to generate nicer change logs by parsing the commit messages only. I don’t even think that is a good idea because every commit does not necessarily have to have its own change log line. I don’t really see the point of building a small CMS inside the commit messages.</p>
+</blockquote>
+<h2 id="Google-Engineering-Practices-Documentation"><a href="#Google-Engineering-Practices-Documentation" class="headerlink" title="Google Engineering Practices Documentation"></a>Google Engineering Practices Documentation</h2><p>Google released <a target="_blank" rel="noopener" href="https://google.github.io/eng-practices/review/developer/cl-descriptions.html">a set of guidelines</a> detailing how to write good commit messages that may also fit into your team’s workflow. The Google Engineering Practices Documentation actually has two documents:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://google.github.io/eng-practices/review/reviewer/">The Code Reviewer’s Guide</a><ul>
+<li>A guide for people doing a code review</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://google.github.io/eng-practices/review/developer/">The Change Author’s Guide</a><ul>
+<li>This guide is for developers whose PRs are going through review</li>
+</ul>
+</li>
+</ul>
+<p>If you’re looking for more perspectives and other industry accepted best practices, I also highly recommend the above documents.</p>
+<p>Also worth calling out is that Google also publishes <a target="_blank" rel="noopener" href="https://github.com/google/styleguide">style guides for various languages</a> that have helped me become a better developer with Python and TypeScript.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Having some sort of standard got git messages is important for maintaining some level of consistency in a project.</p>
+<p>If your team doesn’t know where to start, the Conventional Commits Specification takes under 30 minutes to learn and has specific examples, making for an easy entry point for acquiring a standard. It is also easier to enforce a specific standard like Conventional Commits through git hooks. An example of how to do it can be found <a target="_blank" rel="noopener" href="https://blog.jobins.jp/generate-changelog-from-git-commit-messages">here</a></p>
+<p>The Google guide also contains great examples, but is a longer read and goes over the philosophy behind their recommendations. My personal recommendation is the Google guide, but I also like the philosophy of Conventional Commits, and above all I believe that having a standard is better than having no standard.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Advantages-to-Adhering-to-Guidelines"><span class="toc-number">1.</span> <span class="toc-text">Advantages to Adhering to Guidelines</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Higher-Team-Velocity-Through-Faster-Information-Retrieval"><span class="toc-number">1.1.</span> <span class="toc-text">Higher Team Velocity Through Faster Information Retrieval</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Leveraging-Automation-Tools"><span class="toc-number">1.2.</span> <span class="toc-text">Leveraging Automation Tools</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Conventional-Commits-Specification"><span class="toc-number">2.</span> <span class="toc-text">The Conventional Commits Specification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Should-You-Follow-It"><span class="toc-number">3.</span> <span class="toc-text">Should You Follow It?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Google-Engineering-Practices-Documentation"><span class="toc-number">4.</span> <span class="toc-text">Google Engineering Practices Documentation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">5.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&text=Writing good commit messages"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&is_video=false&description=Writing good commit messages"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Writing good commit messages&body=Check out this article: https://cloudsoup.net/2024/07/06/writing-good-commit-messages/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&title=Writing good commit messages"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&name=Writing good commit messages&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2024/07/06/writing-good-commit-messages/&t=Writing good commit messages"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2026
+    Dave
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

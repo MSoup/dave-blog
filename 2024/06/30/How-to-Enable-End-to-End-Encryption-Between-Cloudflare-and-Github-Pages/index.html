@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="BackgroundOne of the more common ways to host a static website for free today is by utilizing Github Pages. A caveat to using it is that you are handed a domain name that might look like example.githu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages">
+<meta property="og:url" content="https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/index.html">
+<meta property="og:site_name" content="MajesticSoup">
+<meta property="og:description" content="BackgroundOne of the more common ways to host a static website for free today is by utilizing Github Pages. A caveat to using it is that you are handed a domain name that might look like example.githu">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cloudsoup.net/images/cloudflare-proxy-setting.png">
+<meta property="og:image" content="https://cloudsoup.net/images/gh-pages-end-to-end-unencrypted.png">
+<meta property="og:image" content="https://cloudsoup.net/images/cloudflare-ssl.png">
+<meta property="og:image" content="https://cloudsoup.net/images/edge-certificates.png">
+<meta property="article:published_time" content="2024-06-30T05:03:49.000Z">
+<meta property="article:modified_time" content="2026-02-08T03:53:15.294Z">
+<meta property="article:author" content="Dave">
+<meta property="article:tag" content="encryption">
+<meta property="article:tag" content="web hosting">
+<meta property="article:tag" content="SSL certificates">
+<meta property="article:tag" content="TLS">
+<meta property="article:tag" content="cloudflare">
+<meta property="article:tag" content="github pages">
+<meta property="article:tag" content="security">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cloudsoup.net/images/cloudflare-proxy-setting.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/07/04/git-and-dev-containers/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/06/29/how-to-blog/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&text=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&is_video=false&description=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages&body=Check out this article: https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&name=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&t=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Two-Options-to-Handle-End-to-End-Encryption"><span class="toc-number">2.</span> <span class="toc-text">Two Options to Handle End-to-End Encryption</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path"><span class="toc-number">2.1.</span> <span class="toc-text">Allowing Github pages to establish an HTTPS connection for the whole path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><span class="toc-number">2.2.</span> <span class="toc-text">Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What%E2%80%99s-the-difference-between-the-two-options"><span class="toc-number">3.</span> <span class="toc-text">What’s the difference between the two options?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flexible-Encryption-Cloudflare"><span class="toc-number">4.</span> <span class="toc-text">Flexible Encryption (Cloudflare)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Going-From-Flexible-to-Full-Strict-Encryption"><span class="toc-number">5.</span> <span class="toc-text">Going From Flexible to Full (Strict) Encryption</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Enforce-HTTPS-only"><span class="toc-number">6.</span> <span class="toc-text">Enforce HTTPS only</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        (Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Dave</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-06-30T05:03:49.000Z" class="dt-published" itemprop="datePublished">2024-06-30</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Guides/">Guides</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/SSL-certificates/" rel="tag">SSL certificates</a>, <a class="p-category" href="/tags/TLS/" rel="tag">TLS</a>, <a class="p-category" href="/tags/cloudflare/" rel="tag">cloudflare</a>, <a class="p-category" href="/tags/encryption/" rel="tag">encryption</a>, <a class="p-category" href="/tags/github-pages/" rel="tag">github pages</a>, <a class="p-category" href="/tags/security/" rel="tag">security</a>, <a class="p-category" href="/tags/web-hosting/" rel="tag">web hosting</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>One of the more common ways to host a static website for free today is by utilizing <a target="_blank" rel="noopener" href="https://pages.github.com/">Github Pages</a>. A caveat to using it is that you are handed a domain name that might look like <code>example.github.io/some-repo-name</code>. Not exactly the most pretty domain name.</p>
+<p>To get around this, consider buying a domain off of GoDaddy, Namecheap, Google Domains, Cloudflare, or another domain registrar.</p>
+<p>On your own web servers, you’d normally achieve end to end encryption by setting up virtual hosts on your web server (in this case, github pages) and install an SSL certificate for cloudflare’s domain within github pages, but as Github pages uses an automated system to install SSL certificates for you, there is never a need to manually install SSL certificates. GitHub Pages automatically provides HTTPS for custom domains. Convenient, right?</p>
+<h2 id="Two-Options-to-Handle-End-to-End-Encryption"><a href="#Two-Options-to-Handle-End-to-End-Encryption" class="headerlink" title="Two Options to Handle End-to-End Encryption"></a>Two Options to Handle End-to-End Encryption</h2><p>There are two options to achieve end to end ecryption. The first option is allowing Github pages to establish an HTTPS connection for the whole path. The second option is terminating the SSL connection at cloudflare, then having cloudflare re-establish SSL with github pages.</p>
+<h3 id="Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path"><a href="#Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path" class="headerlink" title="Allowing Github pages to establish an HTTPS connection for the whole path"></a>Allowing Github pages to establish an HTTPS connection for the whole path</h3><p>This is the simpler option. To achieve this, create a CNAME record pointing to your GitHub Pages URL and make sure to uncheck the ‘proxy’ setting during this setup.</p>
+<p><img src="/images/cloudflare-proxy-setting.png" alt="cloudflare proxy setting"></p>
+<p>On the github pages side, ensure that <code>Enforce HTTPS</code> is checked.</p>
+<h3 id="Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><a href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages" class="headerlink" title="Terminate the connection at cloudflare, then have cloudflare re-establish with github pages"></a>Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</h3><h2 id="What’s-the-difference-between-the-two-options"><a href="#What’s-the-difference-between-the-two-options" class="headerlink" title="What’s the difference between the two options?"></a>What’s the difference between the two options?</h2><p>The main differentiator of the two options is whether you want to rely on the <code>cloudflare CDN</code> (this option) or the <code>fastly CDN</code> (option 1). They’re both very trustworthy and it comes down to personal preference.</p>
+<p>UPDATE 6&#x2F;2024:</p>
+<p>According to <a target="_blank" rel="noopener" href="https://community.cloudflare.com/t/github-pages-keep-saying-it-cant-enforce-https/397570">this post over on the cloudflare community forums</a>, a user says:</p>
+<blockquote>
+<p>Github Pages can’t&#x2F;won’t generate an SSL certificate while your DNS entries are orange-clouded. You can orange-cloud the DNS entries AFTER the SSL certificate is generated, however, the certificate won’t be able to renew and will expire after 3 months. If you’re using the most secure SSL mode, Full(Strict), traffic will no longer pass when the certificate expires. You can either repeat the process (temporarily grey-cloud) every 3 months, or use the less-secure Full (non-strict) SSL mode which allows Cloudflare to continue trusting the expired certificate (insecure). Or just leave the DNS entries grey-clouded permanently if you don’t actually need Cloudflare proxy features for the site; you’ll still have a CDN since Github Pages uses Fastly.</p>
+</blockquote>
+<p>This suggests to me that using Fastly (not checking the orange cloud) and therefore option 1 is the most hands-off way to achieve end to end encryption. Using the cloudflare CDN requires operating in Full, but NOT Full (strict) mode.</p>
+<h2 id="Flexible-Encryption-Cloudflare"><a href="#Flexible-Encryption-Cloudflare" class="headerlink" title="Flexible Encryption (Cloudflare)"></a>Flexible Encryption (Cloudflare)</h2><p>By default, the traffic between the client and your domain is usually encrypted, but the traffic between your domain and github pages may actually be sent via HTTP. This can pose as a security risk.</p>
+<p><img src="/images/gh-pages-end-to-end-unencrypted.png" alt="unencrypted-last-leg"></p>
+<p>Cloudflare has a mode called <code>flexible encryption</code> enabled by default. We need to change this to enforce end to end encryption.</p>
+<h2 id="Going-From-Flexible-to-Full-Strict-Encryption"><a href="#Going-From-Flexible-to-Full-Strict-Encryption" class="headerlink" title="Going From Flexible to Full (Strict) Encryption"></a>Going From Flexible to Full (Strict) Encryption</h2><p>There are 3 steps to active full (strict) encryption:</p>
+<ol>
+<li>Create a CNAME record pointing to your GitHub Pages URL (normally looks like <username>.github.io–there is no need to include the repository name). This can be done by going to the Cloudflare homepage -&gt; login -&gt; click on your purchased domain -&gt; open up the sidebar -&gt; DNS -&gt; records -&gt; add record -&gt; type: CNAME, name: @, target: <username>.github.io</li>
+</ol>
+<p>At this stage, ensure that you do NOT check the orange cloud (proxy) switch!</p>
+<ol start="2">
+<li>In Cloudflare, set the SSL&#x2F;TLS encryption mode to “Full” or “Full (strict)”. This can be done by going to the Cloudflare homepage -&gt; login -&gt; click on your purchased domain -&gt; open up the sidebar -&gt; SSL&#x2F;TLS -&gt; check the box that says:</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Full (strict)</span><br><span class="line">(Recommended mode) Enable encryption end-to-end and enforce validation on origin certificates. Use Cloudflare’s Origin CA to generate certificates for your origin.</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/cloudflare-ssl.png" alt="end-to-end-ssl"></p>
+<ol start="3">
+<li>Enable HTTPS from the Github pages side</li>
+</ol>
+<p>Within your github repo for the pages you are deploying (<a target="_blank" rel="noopener" href="https://github.com/">https://github.com/</a><your_username>&#x2F;<your_repo>&#x2F;settings&#x2F;pages), check the box that says <code>Enforce HTTPS</code>.</p>
+<p>You may notice that there is a message that says</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Enforce HTTPS — Unavailable for your site because your domain is not properly configured to support HTTPS (example.com) — Troubleshooting custom domains</span><br></pre></td></tr></table></figure>
+
+<p>This is usually a sign that DNS propagation has not finished, and you may need to wait for some time before it is possible to enable it. In this state, while traffic from the client to github pages is encrypted, the response might still be visible to cloudflare. It is worth waiting until it is available and enabling HTTPS on the github pages side as well.</p>
+<p>Next, depending on if you want to use the cloudflare CDN or fastly CDN, your final step differs.</p>
+<ul>
+<li>if you want to use the cloudflare CDN, go back and check the orange cloud to enable proxying</li>
+<li>if you want to use the fastly CDN, you must wait until DNS propagation is finished. Then check the ‘enforce HTTPS’ option on github pages</li>
+</ul>
+<h2 id="Enforce-HTTPS-only"><a href="#Enforce-HTTPS-only" class="headerlink" title="Enforce HTTPS only"></a>Enforce HTTPS only</h2><p>Go to your cloudflare dashboard &gt; SSL&#x2F;TLS &gt; Edge Certificates<br><img src="/images/edge-certificates.png" alt="edge certificates"></p>
+<p>Then enable two options:</p>
+<ul>
+<li><p>Always use HTTPS<br>Redirect all requests with scheme “http” to “https”. This applies to all http requests to the zone.</p>
+</li>
+<li><p>Automatic HTTPS Rewrites<br>Automatic HTTPS Rewrites helps fix mixed content by changing “http” to “https” for all resources or links on your web site that can be served with HTTPS.</p>
+</li>
+</ul>
+<p>Congratulations, you now have end to end encryption plus the benefits of using a CDN.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Two-Options-to-Handle-End-to-End-Encryption"><span class="toc-number">2.</span> <span class="toc-text">Two Options to Handle End-to-End Encryption</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Allowing-Github-pages-to-establish-an-HTTPS-connection-for-the-whole-path"><span class="toc-number">2.1.</span> <span class="toc-text">Allowing Github pages to establish an HTTPS connection for the whole path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Terminate-the-connection-at-cloudflare-then-have-cloudflare-re-establish-with-github-pages"><span class="toc-number">2.2.</span> <span class="toc-text">Terminate the connection at cloudflare, then have cloudflare re-establish with github pages</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What%E2%80%99s-the-difference-between-the-two-options"><span class="toc-number">3.</span> <span class="toc-text">What’s the difference between the two options?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flexible-Encryption-Cloudflare"><span class="toc-number">4.</span> <span class="toc-text">Flexible Encryption (Cloudflare)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Going-From-Flexible-to-Full-Strict-Encryption"><span class="toc-number">5.</span> <span class="toc-text">Going From Flexible to Full (Strict) Encryption</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Enforce-HTTPS-only"><span class="toc-number">6.</span> <span class="toc-text">Enforce HTTPS only</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&text=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&is_video=false&description=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages&body=Check out this article: https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&title=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&name=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2024/06/30/How-to-Enable-End-to-End-Encryption-Between-Cloudflare-and-Github-Pages/&t=(Guide) How to Enable End to End Encryption Between Cloudflare and Github Pages"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2026
+    Dave
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="If you’ve ever written a script that makes a bunch of HTTP requests one at a time and thought “this is painfully slow,” this post is for you. We’re going to take a slow, synchronous script and make it">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python Concurrency Explained With Network Requests">
+<meta property="og:url" content="https://cloudsoup.net/2026/02/08/python-concurrency/index.html">
+<meta property="og:site_name" content="MajesticSoup">
+<meta property="og:description" content="If you’ve ever written a script that makes a bunch of HTTP requests one at a time and thought “this is painfully slow,” this post is for you. We’re going to take a slow, synchronous script and make it">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-08T04:30:11.000Z">
+<meta property="article:modified_time" content="2026-02-08T04:37:20.300Z">
+<meta property="article:author" content="Dave">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Concurrency">
+<meta property="article:tag" content="asyncio">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Python Concurrency Explained With Network Requests</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/07/07/python-wheels/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2026/02/08/python-concurrency/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2026/02/08/python-concurrency/&text=Python Concurrency Explained With Network Requests"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2026/02/08/python-concurrency/&is_video=false&description=Python Concurrency Explained With Network Requests"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Python Concurrency Explained With Network Requests&body=Check out this article: https://cloudsoup.net/2026/02/08/python-concurrency/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2026/02/08/python-concurrency/&name=Python Concurrency Explained With Network Requests&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2026/02/08/python-concurrency/&t=Python Concurrency Explained With Network Requests"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Scenario"><span class="toc-number">1.</span> <span class="toc-text">Scenario</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Concurrency-to-Save-the-Day"><span class="toc-number">2.</span> <span class="toc-text">Concurrency to Save the Day</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Fix-asyncio-aiohttp"><span class="toc-number">3.</span> <span class="toc-text">The Fix: asyncio + aiohttp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What%E2%80%99s-Happening-Under-the-Hood"><span class="toc-number">4.</span> <span class="toc-text">What’s Happening Under the Hood</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#When-to-Use-This-and-When-Not-To"><span class="toc-number">5.</span> <span class="toc-text">When to Use This (and When Not To)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gotchas"><span class="toc-number">6.</span> <span class="toc-text">Gotchas</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">7.</span> <span class="toc-text">Summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resources"><span class="toc-number">8.</span> <span class="toc-text">Resources</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Python Concurrency Explained With Network Requests
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Dave</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2026-02-08T04:30:11.000Z" class="dt-published" itemprop="datePublished">2026-02-08</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Guides/">Guides</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Concurrency/" rel="tag">Concurrency</a>, <a class="p-category" href="/tags/Python/" rel="tag">Python</a>, <a class="p-category" href="/tags/asyncio/" rel="tag">asyncio</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>If you’ve ever written a script that makes a bunch of HTTP requests one at a time and thought “this is painfully slow,” this post is for you.</p>
+<p>We’re going to take a slow, synchronous script and make it fast using Python’s <code>asyncio</code>. </p>
+<h2 id="Scenario"><a href="#Scenario" class="headerlink" title="Scenario"></a>Scenario</h2><p>Let’s say you need to fetch data from 10 different URLs. One naive approach might look like this:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">urls = [<span class="string">f&quot;https://httpbin.org/delay/1&quot;</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]</span><br><span class="line"></span><br><span class="line">start = time.time()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> url <span class="keyword">in</span> urls:</span><br><span class="line">    response = requests.get(url)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Status: <span class="subst">&#123;response.status_code&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Total time: <span class="subst">&#123;time.time() - start:<span class="number">.2</span>f&#125;</span>s&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Each request takes about 1 second because the endpoint simulates a 1-second delay. We have 10 requests, so this takes roughly <strong>10 seconds</strong>.</p>
+<p>While we’re waiting for a response from the server, our program is doing absolutely nothing until bytes arrive over the network. Then it moves to the next request and waits for information again. </p>
+<h2 id="Concurrency-to-Save-the-Day"><a href="#Concurrency-to-Save-the-Day" class="headerlink" title="Concurrency to Save the Day"></a>Concurrency to Save the Day</h2><p>Concurrency doesn’t mean doing things “at the same time” on multiple CPU cores (that’s parallelism). Concurrency means <strong>managing multiple tasks that are in progress at once</strong>.</p>
+<p>Concurrency is great for network requests because the “slow part” is waiting for a remote server to respond — not doing computation on your CPU. </p>
+<h2 id="The-Fix-asyncio-aiohttp"><a href="#The-Fix-asyncio-aiohttp" class="headerlink" title="The Fix: asyncio + aiohttp"></a>The Fix: asyncio + aiohttp</h2><p>Python’s <code>asyncio</code> module lets us write concurrent code using <code>async</code>&#x2F;<code>await</code>. Combined with <code>aiohttp</code> (an async HTTP library), we can fire off all 10 requests without waiting for each one to finish:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> aiohttp</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">urls = [<span class="string">f&quot;https://httpbin.org/delay/1&quot;</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">fetch</span>(<span class="params">session, url</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> session.get(url) <span class="keyword">as</span> response:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Status: <span class="subst">&#123;response.status&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> response.status</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> aiohttp.ClientSession() <span class="keyword">as</span> session:</span><br><span class="line">        tasks = [fetch(session, url) <span class="keyword">for</span> url <span class="keyword">in</span> urls]</span><br><span class="line">        <span class="keyword">await</span> asyncio.gather(*tasks)</span><br><span class="line"></span><br><span class="line">start = time.time()</span><br><span class="line">asyncio.run(main())</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Total time: <span class="subst">&#123;time.time() - start:<span class="number">.2</span>f&#125;</span>s&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>This finishes in roughly <strong>1 second</strong> instead of 10. Same 10 requests, ~10x faster.</p>
+<h2 id="What’s-Happening-Under-the-Hood"><a href="#What’s-Happening-Under-the-Hood" class="headerlink" title="What’s Happening Under the Hood"></a>What’s Happening Under the Hood</h2><p>Let’s walk through this step by step:</p>
+<ol>
+<li><p><code>asyncio.run(main())</code> starts the <strong>event loop</strong> — this is the “waiter” from our restaurant analogy.</p>
+</li>
+<li><p>We create a list of <code>tasks</code>, one for each URL. Each task is a call to <code>fetch()</code> that hasn’t started yet.</p>
+</li>
+<li><p><code>asyncio.gather(*tasks)</code> tells the event loop: “start all of these and let me know when they’re all done.”</p>
+</li>
+<li><p>The event loop starts the first request. When it hits <code>session.get(url)</code>, instead of blocking, it says “I’ll come back when the network responds” and <strong>moves on to start the next request</strong>.</p>
+</li>
+<li><p>It does this for all 10 requests. Now all 10 are “in flight” simultaneously.</p>
+</li>
+<li><p>As responses come back, the event loop picks up each one right where it left off (the line after <code>await</code>) and finishes processing it.</p>
+</li>
+</ol>
+<p>The key insight: <strong><code>await</code> is not <code>time.sleep()</code>.</strong> When you <code>await</code> something, you’re telling the event loop “I’m waiting on I&#x2F;O, go do something else in the meantime.” That’s what makes it concurrent.</p>
+<h2 id="When-to-Use-This-and-When-Not-To"><a href="#When-to-Use-This-and-When-Not-To" class="headerlink" title="When to Use This (and When Not To)"></a>When to Use This (and When Not To)</h2><p><strong>Use asyncio for I&#x2F;O-bound work:</strong></p>
+<ul>
+<li>HTTP requests (APIs, web scraping)</li>
+<li>Database queries</li>
+<li>File reads&#x2F;writes</li>
+<li>Anything where your code spends most of its time <em>waiting</em></li>
+</ul>
+<p><strong>Don’t use asyncio for CPU-bound work:</strong></p>
+<ul>
+<li>Number crunching, image processing, data transformation</li>
+<li>If your code is slow because the CPU is busy computing, concurrency won’t help — you need <code>multiprocessing</code> for true parallelism across cores</li>
+</ul>
+<p>A quick rule of thumb: if you can make your program faster by getting a faster internet connection, it’s I&#x2F;O-bound. If you need a faster CPU, it’s CPU-bound.</p>
+<h2 id="Gotchas"><a href="#Gotchas" class="headerlink" title="Gotchas"></a>Gotchas</h2><p>A few things that trip people up:</p>
+<ul>
+<li><strong>You can’t mix <code>requests</code> with <code>asyncio</code> easily.</strong> The <code>requests</code> library is synchronous and will block the event loop. Use <code>aiohttp</code> instead, or wrap synchronous calls with <code>asyncio.to_thread()</code>.</li>
+<li><strong><code>asyncio.run()</code> can only be called once.</strong> It creates and destroys an event loop. If you’re inside a framework that already has a loop (like FastAPI), just <code>await</code> directly.</li>
+<li><strong>Error handling works normally.</strong> Wrap your <code>await</code> calls in try&#x2F;except just like synchronous code.</li>
+</ul>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>Synchronous</th>
+<th>Concurrent (asyncio)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10 requests @ 1s each</td>
+<td>~10 seconds</td>
+<td>~1 second</td>
+</tr>
+<tr>
+<td>How it works</td>
+<td>One at a time, blocking</td>
+<td>All in flight, non-blocking</td>
+</tr>
+<tr>
+<td>Good for</td>
+<td>Simple scripts</td>
+<td>Many I&#x2F;O operations</td>
+</tr>
+</tbody></table>
+<h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/library/asyncio.html">asyncio docs</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.aiohttp.org/">aiohttp docs</a></li>
+<li><a target="_blank" rel="noopener" href="https://realpython.com/async-io-python/">Real Python: Async IO in Python</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Scenario"><span class="toc-number">1.</span> <span class="toc-text">Scenario</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Concurrency-to-Save-the-Day"><span class="toc-number">2.</span> <span class="toc-text">Concurrency to Save the Day</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Fix-asyncio-aiohttp"><span class="toc-number">3.</span> <span class="toc-text">The Fix: asyncio + aiohttp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What%E2%80%99s-Happening-Under-the-Hood"><span class="toc-number">4.</span> <span class="toc-text">What’s Happening Under the Hood</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#When-to-Use-This-and-When-Not-To"><span class="toc-number">5.</span> <span class="toc-text">When to Use This (and When Not To)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gotchas"><span class="toc-number">6.</span> <span class="toc-text">Gotchas</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">7.</span> <span class="toc-text">Summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resources"><span class="toc-number">8.</span> <span class="toc-text">Resources</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2026/02/08/python-concurrency/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2026/02/08/python-concurrency/&text=Python Concurrency Explained With Network Requests"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2026/02/08/python-concurrency/&is_video=false&description=Python Concurrency Explained With Network Requests"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Python Concurrency Explained With Network Requests&body=Check out this article: https://cloudsoup.net/2026/02/08/python-concurrency/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2026/02/08/python-concurrency/&title=Python Concurrency Explained With Network Requests"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2026/02/08/python-concurrency/&name=Python Concurrency Explained With Network Requests&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2026/02/08/python-concurrency/&t=Python Concurrency Explained With Network Requests"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2026
+    Dave
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
