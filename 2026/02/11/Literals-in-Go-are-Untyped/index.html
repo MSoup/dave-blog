@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="I wasn’t sure if this topic warranted its own post or not, but upon first encountering this statement, I did a double take. What do you mean they’re untyped? Are you telling me that &quot;hello&quot;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Literals in Go are Untyped">
+<meta property="og:url" content="https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/index.html">
+<meta property="og:site_name" content="MajesticSoup">
+<meta property="og:description" content="I wasn’t sure if this topic warranted its own post or not, but upon first encountering this statement, I did a double take. What do you mean they’re untyped? Are you telling me that &quot;hello&quot;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-02-11T04:56:30.000Z">
+<meta property="article:modified_time" content="2026-02-11T04:57:10.762Z">
+<meta property="article:author" content="Dave">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Literals in Go are Untyped</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2026/02/08/python-concurrency/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&text=Literals in Go are Untyped"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&is_video=false&description=Literals in Go are Untyped"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Literals in Go are Untyped&body=Check out this article: https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&name=Literals in Go are Untyped&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&t=Literals in Go are Untyped"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Why-does-this-matter"><span class="toc-number">1.</span> <span class="toc-text">Why does this matter?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#So-when-does-it-become-typed"><span class="toc-number">2.</span> <span class="toc-text">So when does it become typed?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-takeaway"><span class="toc-number">3.</span> <span class="toc-text">The takeaway</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Literals in Go are Untyped
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Dave</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2026-02-11T04:56:30.000Z" class="dt-published" itemprop="datePublished">2026-02-11</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>I wasn’t sure if this topic warranted its own post or not, but upon first encountering this statement, I did a double take.</p>
+<p>What do you mean they’re untyped? Are you telling me that <code>&quot;hello&quot;</code> is not a string?</p>
+<p>And the answer is… That’s correct!</p>
+<p>When you write a literal like <code>&quot;hello&quot;</code>, <code>42</code>, or <code>3.14</code>, it does have a <strong>default type</strong> (string, int, float64 respectively), but it’s not <em>committed</em> to that type yet. Go calls these “untyped constants.”</p>
+<p>The moment these literals get assigned to a variable or used in a context that demands a concrete type, it resolves. You can think of it as the literal being flexible right up until Go <em>needs</em> to commit.</p>
+<h2 id="Why-does-this-matter"><a href="#Why-does-this-matter" class="headerlink" title="Why does this matter?"></a>Why does this matter?</h2><p>This flexibility means untyped literals can flow into compatible types without an explicit conversion. Consider this:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Celsius <span class="type">float64</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> temp Celsius = <span class="number">36.6</span> <span class="comment">// works!</span></span><br></pre></td></tr></table></figure>
+
+<p>If <code>36.6</code> were already typed as <code>float64</code>, this would fail — Go doesn’t allow implicit conversions between named types. You’d have to write <code>Celsius(36.6)</code> instead. But because <code>36.6</code> is an untyped constant, it happily adapts to <code>Celsius</code>.</p>
+<p>The same applies to strings:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Greeting <span class="type">string</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> g Greeting = <span class="string">&quot;hello&quot;</span> <span class="comment">// works!</span></span><br></pre></td></tr></table></figure>
+
+<p>No cast needed because <code>&quot;hello&quot;</code> hasn’t committed to <code>string</code> yet.</p>
+<h2 id="So-when-does-it-become-typed"><a href="#So-when-does-it-become-typed" class="headerlink" title="So when does it become typed?"></a>So when <em>does</em> it become typed?</h2><p>When Go has no type context to guide it, it falls back to the default type:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s := <span class="string">&quot;hello&quot;</span> <span class="comment">// s is of type string</span></span><br><span class="line">x := <span class="number">42</span>      <span class="comment">// x is of type int</span></span><br><span class="line">f := <span class="number">3.14</span>    <span class="comment">// f is of type float64</span></span><br></pre></td></tr></table></figure>
+
+<p>Here, <code>:=</code> asks Go to infer a type, and with nothing else to go on, it reaches for the default. At this point, <code>s</code> is a <code>string</code> — concrete and committed.</p>
+<h2 id="The-takeaway"><a href="#The-takeaway" class="headerlink" title="The takeaway"></a>The takeaway</h2><p>“Untyped” doesn’t mean “no type information.” It means the literal is flexible — a kind of superposition of compatible types that collapses into a concrete one only when it needs to. It’s a small detail, but it’s one of those things that makes Go’s type system feel surprisingly ergonomic for a statically typed language.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Why-does-this-matter"><span class="toc-number">1.</span> <span class="toc-text">Why does this matter?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#So-when-does-it-become-typed"><span class="toc-number">2.</span> <span class="toc-text">So when does it become typed?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-takeaway"><span class="toc-number">3.</span> <span class="toc-text">The takeaway</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&text=Literals in Go are Untyped"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&is_video=false&description=Literals in Go are Untyped"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Literals in Go are Untyped&body=Check out this article: https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&title=Literals in Go are Untyped"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&name=Literals in Go are Untyped&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2026/02/11/Literals-in-Go-are-Untyped/&t=Literals in Go are Untyped"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2026
+    Dave
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
