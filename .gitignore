@@ -7,5 +7,5 @@ public/
 .deploy*/
 _multiconfig.yml
 deploy.sh
-
+themes/cactus
 CLAUDE.md
