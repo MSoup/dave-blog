@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Always Know What Version of Your Frontend Is Running (Vite + Git)Ever deploy a frontend and wonder “wait, is this actually the latest version?” You squint at the UI, try to remember what changed, and">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tracking Frontend Vite Changes">
+<meta property="og:url" content="https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/index.html">
+<meta property="og:site_name" content="MajesticSoup">
+<meta property="og:description" content="Always Know What Version of Your Frontend Is Running (Vite + Git)Ever deploy a frontend and wonder “wait, is this actually the latest version?” You squint at the UI, try to remember what changed, and">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-03-29T08:42:00.000Z">
+<meta property="article:modified_time" content="2026-03-29T08:42:46.627Z">
+<meta property="article:author" content="Dave">
+<meta property="article:tag" content="frontend">
+<meta property="article:tag" content="vite">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Tracking Frontend Vite Changes</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2026/02/11/2026-02-11-literals-in-go-are-untyped/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&text=Tracking Frontend Vite Changes"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&is_video=false&description=Tracking Frontend Vite Changes"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Tracking Frontend Vite Changes&body=Check out this article: https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&name=Tracking Frontend Vite Changes&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&t=Tracking Frontend Vite Changes"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Always-Know-What-Version-of-Your-Frontend-Is-Running-Vite-Git"><span class="toc-number">1.</span> <span class="toc-text">Always Know What Version of Your Frontend Is Running (Vite + Git)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Technique"><span class="toc-number">1.1.</span> <span class="toc-text">The Technique</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-1-Update-vite-config-ts"><span class="toc-number">1.2.</span> <span class="toc-text">Step 1: Update vite.config.ts</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-2-Declare-the-Type-TypeScript"><span class="toc-number">1.3.</span> <span class="toc-text">Step 2: Declare the Type (TypeScript)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-3-Use-It-Anywhere"><span class="toc-number">1.4.</span> <span class="toc-text">Step 3: Use It Anywhere</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What-You-Get"><span class="toc-number">1.5.</span> <span class="toc-text">What You Get</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Going-Further"><span class="toc-number">1.6.</span> <span class="toc-text">Going Further</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Catch"><span class="toc-number">1.7.</span> <span class="toc-text">The Catch</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Tracking Frontend Vite Changes
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Dave</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2026-03-29T08:42:00.000Z" class="dt-published" itemprop="datePublished">2026-03-29</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/frontend/" rel="tag">frontend</a>, <a class="p-category" href="/tags/vite/" rel="tag">vite</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="Always-Know-What-Version-of-Your-Frontend-Is-Running-Vite-Git"><a href="#Always-Know-What-Version-of-Your-Frontend-Is-Running-Vite-Git" class="headerlink" title="Always Know What Version of Your Frontend Is Running (Vite + Git)"></a>Always Know What Version of Your Frontend Is Running (Vite + Git)</h1><p>Ever deploy a frontend and wonder “wait, is this actually the latest version?” You squint at the UI, try to remember what changed, and eventually crack open the network tab or SSH into a server.</p>
+<p>There’s a simpler way. Inject the git commit hash at build time and display it right in the UI. Three lines of config, zero runtime cost.</p>
+<h2 id="The-Technique"><a href="#The-Technique" class="headerlink" title="The Technique"></a>The Technique</h2><p>Vite has a <code>define</code> option that performs global string replacement at build time. You give it a constant name and a value, and Vite swaps every occurrence in your source code with that value — before the browser ever sees it.</p>
+<p>We combine this with <code>git rev-parse --short HEAD</code>, which gives you the 7-character abbreviated commit hash (e.g., <code>ff9c56d</code>).</p>
+<h2 id="Step-1-Update-vite-config-ts"><a href="#Step-1-Update-vite-config-ts" class="headerlink" title="Step 1: Update vite.config.ts"></a>Step 1: Update <code>vite.config.ts</code></h2><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; execSync &#125; <span class="keyword">from</span> <span class="string">&quot;child_process&quot;</span></span><br><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&quot;vite&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> commitHash = <span class="title function_">execSync</span>(<span class="string">&quot;git rev-parse --short HEAD&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="comment">// ...your existing config</span></span><br><span class="line">  <span class="attr">define</span>: &#123;</span><br><span class="line">    <span class="attr">__COMMIT_HASH__</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(commitHash),</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>execSync</code> runs at build time (when you run <code>npm run dev</code> or <code>npm run build</code>), not in the browser. <code>JSON.stringify</code> wraps the value in quotes so Vite injects it as a string literal.</p>
+<h2 id="Step-2-Declare-the-Type-TypeScript"><a href="#Step-2-Declare-the-Type-TypeScript" class="headerlink" title="Step 2: Declare the Type (TypeScript)"></a>Step 2: Declare the Type (TypeScript)</h2><p>If you’re using TypeScript, add a declaration so the compiler knows about the global:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/vite-env.d.ts</span></span><br><span class="line"><span class="comment">/// &lt;reference types=&quot;vite/client&quot; /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="keyword">const</span> <span class="attr">__COMMIT_HASH__</span>: <span class="built_in">string</span></span><br></pre></td></tr></table></figure>
+
+<p>If you’re using plain JavaScript, skip this step.</p>
+<h2 id="Step-3-Use-It-Anywhere"><a href="#Step-3-Use-It-Anywhere" class="headerlink" title="Step 3: Use It Anywhere"></a>Step 3: Use It Anywhere</h2><figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Footer</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">footer</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>Build: &#123;__COMMIT_HASH__&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>That’s it. When Vite builds your app, every reference to <code>__COMMIT_HASH__</code> is replaced with the literal string <code>&quot;ff9c56d&quot;</code> (or whatever your current commit is). There’s no runtime lookup, no API call, no environment variable to manage.</p>
+<h2 id="What-You-Get"><a href="#What-You-Get" class="headerlink" title="What You Get"></a>What You Get</h2><ul>
+<li><strong>In development:</strong> The hash updates every time you restart the dev server. You always know which commit you’re working from.</li>
+<li><strong>In production:</strong> The hash is baked into the built JavaScript. You can glance at the footer and immediately know what’s deployed.</li>
+<li><strong>In debugging:</strong> A user reports a bug and sends a screenshot. The commit hash is right there — you know exactly what code they’re running.</li>
+</ul>
+<h2 id="Going-Further"><a href="#Going-Further" class="headerlink" title="Going Further"></a>Going Further</h2><p>You can inject more than just the commit hash:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> commitHash = <span class="title function_">execSync</span>(<span class="string">&quot;git rev-parse --short HEAD&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>()</span><br><span class="line"><span class="keyword">const</span> buildTime = <span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">toISOString</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">define</span>: &#123;</span><br><span class="line">    <span class="attr">__COMMIT_HASH__</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(commitHash),</span><br><span class="line">    <span class="attr">__BUILD_TIME__</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(buildTime),</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Or include the branch name, the tag, or whether the working tree is dirty:</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> branch = <span class="title function_">execSync</span>(<span class="string">&quot;git rev-parse --abbrev-ref HEAD&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>()</span><br><span class="line"><span class="keyword">const</span> isDirty = <span class="title function_">execSync</span>(<span class="string">&quot;git status --porcelain&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>() !== <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">const</span> commitHash = <span class="title function_">execSync</span>(<span class="string">&quot;git rev-parse --short HEAD&quot;</span>).<span class="title function_">toString</span>().<span class="title function_">trim</span>()</span><br><span class="line">  + (isDirty ? <span class="string">&quot;-dirty&quot;</span> : <span class="string">&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>The <code>define</code> option is powerful because it runs arbitrary Node.js at build time and collapses the result into a static string. No runtime overhead, no secrets leaking, no extra dependencies.</p>
+<h2 id="The-Catch"><a href="#The-Catch" class="headerlink" title="The Catch"></a>The Catch</h2><p>The hash is captured when the build starts. If you’re running <code>npm run dev</code> and make new commits without restarting the dev server, the displayed hash will be stale. In practice this rarely matters — you restart the dev server often enough — but it’s worth knowing.</p>
+<p>For production builds (<code>npm run build</code>), this is a non-issue. The hash is captured at build time, which is exactly when you want it frozen.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Always-Know-What-Version-of-Your-Frontend-Is-Running-Vite-Git"><span class="toc-number">1.</span> <span class="toc-text">Always Know What Version of Your Frontend Is Running (Vite + Git)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Technique"><span class="toc-number">1.1.</span> <span class="toc-text">The Technique</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-1-Update-vite-config-ts"><span class="toc-number">1.2.</span> <span class="toc-text">Step 1: Update vite.config.ts</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-2-Declare-the-Type-TypeScript"><span class="toc-number">1.3.</span> <span class="toc-text">Step 2: Declare the Type (TypeScript)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-3-Use-It-Anywhere"><span class="toc-number">1.4.</span> <span class="toc-text">Step 3: Use It Anywhere</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What-You-Get"><span class="toc-number">1.5.</span> <span class="toc-text">What You Get</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Going-Further"><span class="toc-number">1.6.</span> <span class="toc-text">Going Further</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Catch"><span class="toc-number">1.7.</span> <span class="toc-text">The Catch</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&text=Tracking Frontend Vite Changes"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&is_video=false&description=Tracking Frontend Vite Changes"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Tracking Frontend Vite Changes&body=Check out this article: https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&title=Tracking Frontend Vite Changes"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&name=Tracking Frontend Vite Changes&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://cloudsoup.net/2026/03/29/2026-03-29-tracking-frontend-vite-changes/&t=Tracking Frontend Vite Changes"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2026
+    Dave
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/MSoup">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
